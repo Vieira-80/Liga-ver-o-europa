@@ -2,29 +2,83 @@
 <head>
 <meta charset="UTF-8">
 <title>Liga de Bilhar</title><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><style>
-body { font-family:Arial; background:#0f172a; color:white; padding:15px;}
-h1{text-align:center;}
-
-#adminBtn{
-position:fixed;top:10px;right:10px;background:none;border:none;color:#94a3b8;
+body {
+  font-family: 'Segoe UI', Arial;
+  background: linear-gradient(180deg, #064e3b, #022c22);
+  color: #f8fafc;
+  padding: 15px;
 }
 
-.card{background:#1e293b;padding:15px;margin-bottom:20px;border-radius:10px;}
+h1 {
+  text-align:center;
+  color:#facc15;
+  margin-bottom:10px;
+}
 
-.jogo{display:flex;justify-content:space-between;background:#020617;padding:8px;border-radius:8px;margin-bottom:5px;}
+#adminBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  background:none;
+  border:none;
+  color:#cbd5f5;
+  opacity:0.5;
+}
 
-input{width:40px;text-align:center;background:#334155;border:none;color:white;}
+.card{
+  background:rgba(15,23,42,0.85);
+  backdrop-filter: blur(6px);
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:20px;
+  box-shadow:0 0 10px rgba(0,0,0,0.4);
+}
 
-.vencedor{color:#22c55e;}
-.derrotado{color:#ef4444;}
+.jogo{
+  display:flex;
+  justify-content:space-between;
+  background:#020617;
+  padding:8px;
+  border-radius:8px;
+  margin-bottom:6px;
+}
 
-table{width:100%;margin-top:10px;}
-td,th{text-align:center;padding:6px;}
+input{
+  width:40px;
+  text-align:center;
+  background:#334155;
+  border:none;
+  color:white;
+  border-radius:6px;
+}
 
-.top{background:#1e3a8a;}
+.vencedor{ color:#22c55e; font-weight:bold;}
+.derrotado{ color:#ef4444; }
+
+table{
+  width:100%;
+  margin-top:10px;
+  border-collapse:collapse;
+}
+
+th{
+  background:#020617;
+  color:#facc15;
+}
+
+td,th{
+  padding:8px;
+  text-align:center;
+}
+
+.top{
+  background:#1e3a8a;
+  font-weight:bold;
+}
+
 </style></head><body><button id="adminBtn" onclick="login()">⚙️</button>
 
-<h1>LIGA DE BILHAR</h1><div id="app"></div><script>
+<h1>🎱 LIGA DE BILHAR 🎱</h1><div id="app"></div><script>
 
 const PASSWORD="1234";
 let editavel=false;
@@ -35,12 +89,10 @@ if(p===PASSWORD){
 editavel=true;
 alert("Modo operador ativo");
 render();
-}else{
-alert("Código errado");
 }
 }
 
-// 🔥 FIREBASE (O TEU)
+// FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
   authDomain: "liga-verao-salaoeuropa.firebaseapp.com",
@@ -51,7 +103,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
-// 👉 26 jogadores (EDITA AQUI OS NOMES)
+// JOGADORES
 const jogadores=[
 "Jogador1","Jogador2","Jogador3","Jogador4","Jogador5","Jogador6",
 "Jogador7","Jogador8","Jogador9","Jogador10","Jogador11","Jogador12",
@@ -60,7 +112,7 @@ const jogadores=[
 "Jogador25","Jogador26"
 ];
 
-// 🔁 GERAR JORNADAS AUTOMÁTICAS
+// JORNADAS
 function gerarJornadas(lista){
 let arr=[...lista];
 let jornadas=[];
@@ -83,13 +135,11 @@ const jornadas=gerarJornadas(jogadores);
 
 let dados={};
 
-// 🔄 LER FIREBASE
 db.ref("bilhar").on("value",snap=>{
 dados=snap.val()||{};
 render();
 });
 
-// 💾 GUARDAR
 function guardar(){
 if(!editavel)return;
 
@@ -100,11 +150,18 @@ dados[i.dataset.id]=i.value;
 db.ref("bilhar").set(dados);
 }
 
-// 🧠 RENDER
+// RENDER
 function render(){
 
 let html="";
 
+// 🔥 CLASSIFICAÇÃO NO TOPO
+html+=`<div class="card"><h2>🏆 Classificação</h2>
+<table id="class">
+<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
+</table></div>`;
+
+// 🔥 CALENDÁRIO EM BAIXO
 jornadas.forEach((jornada,j)=>{
 
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
@@ -141,14 +198,8 @@ html+="</div>";
 
 });
 
-html+=`<div class="card"><h2>Classificação</h2>
-<table id="class">
-<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
-</table></div>`;
-
 document.getElementById("app").innerHTML=html;
 
-// inputs
 document.querySelectorAll("input").forEach(i=>{
 i.disabled=!editavel;
 i.oninput=guardar;
@@ -157,7 +208,7 @@ i.oninput=guardar;
 calcular();
 }
 
-// 📊 CLASSIFICAÇÃO
+// CLASSIFICAÇÃO
 function calcular(){
 
 let stats={};
@@ -198,7 +249,6 @@ stats[p2].pts+=3;
 });
 
 let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
-
 lista.sort((a,b)=>b.pts-a.pts);
 
 let t=document.getElementById("class");
