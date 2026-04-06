@@ -2,49 +2,62 @@
 <head>
 <meta charset="UTF-8">
 <title>Liga de Bilhar</title><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><style>
+
 body {
   font-family: 'Segoe UI', Arial;
-  background: linear-gradient(180deg, #064e3b, #022c22);
+  background: radial-gradient(circle at top, #065f46, #022c22);
   color: #f8fafc;
   padding: 15px;
 }
 
+/* LOGO */
+.logo{
+  display:block;
+  margin:0 auto 10px auto;
+  width:160px;
+  opacity:0.9;
+}
+
+/* TÍTULO */
 h1 {
   text-align:center;
   color:#facc15;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
 
+/* BOTÃO ADMIN */
 #adminBtn{
   position:fixed;
   top:10px;
   right:10px;
   background:none;
   border:none;
-  color:#cbd5f5;
+  color:#94a3b8;
   opacity:0.5;
 }
 
+/* CARDS */
 .card{
   background:rgba(15,23,42,0.85);
-  backdrop-filter: blur(6px);
-  border-radius:12px;
+  backdrop-filter: blur(8px);
+  border-radius:14px;
   padding:15px;
   margin-bottom:20px;
-  box-shadow:0 0 10px rgba(0,0,0,0.4);
+  box-shadow:0 4px 15px rgba(0,0,0,0.5);
 }
 
+/* JOGOS */
 .jogo{
   display:flex;
   justify-content:space-between;
   background:#020617;
-  padding:8px;
+  padding:10px;
   border-radius:8px;
   margin-bottom:6px;
 }
 
 input{
-  width:40px;
+  width:42px;
   text-align:center;
   background:#334155;
   border:none;
@@ -52,9 +65,11 @@ input{
   border-radius:6px;
 }
 
+/* RESULTADOS */
 .vencedor{ color:#22c55e; font-weight:bold;}
 .derrotado{ color:#ef4444; }
 
+/* TABELA */
 table{
   width:100%;
   margin-top:10px;
@@ -67,18 +82,19 @@ th{
 }
 
 td,th{
-  padding:8px;
+  padding:10px;
   text-align:center;
 }
 
-.top{
-  background:#1e3a8a;
-  font-weight:bold;
-}
+/* TOP */
+.top1{ background:#facc15; color:black;}
+.top2{ background:#94a3b8; color:black;}
+.top3{ background:#b45309; color:white;}
+.top{ background:#1e3a8a;}
 
 </style></head><body><button id="adminBtn" onclick="login()">⚙️</button>
 
-<h1>🎱 LIGA DE BILHAR 🎱</h1><div id="app"></div><script>
+<!-- 🔥 LOGO --><img src="logo.png" class="logo"><h1>🎱 LIGA DE BILHAR 🎱</h1><div id="app"></div><script>
 
 const PASSWORD="1234";
 let editavel=false;
@@ -150,18 +166,17 @@ dados[i.dataset.id]=i.value;
 db.ref("bilhar").set(dados);
 }
 
-// RENDER
 function render(){
 
 let html="";
 
-// 🔥 CLASSIFICAÇÃO NO TOPO
+// CLASSIFICAÇÃO
 html+=`<div class="card"><h2>🏆 Classificação</h2>
 <table id="class">
 <tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
 </table></div>`;
 
-// 🔥 CALENDÁRIO EM BAIXO
+// JORNADAS
 jornadas.forEach((jornada,j)=>{
 
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
@@ -255,8 +270,15 @@ let t=document.getElementById("class");
 t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
 
 lista.forEach((j,i)=>{
+
+let classe="";
+if(i===0)classe="top1";
+else if(i===1)classe="top2";
+else if(i===2)classe="top3";
+else if(i<8)classe="top";
+
 t.innerHTML+=`
-<tr class="${i<8?"top":""}">
+<tr class="${classe}">
 <td>${i+1}</td>
 <td>${j.nome}</td>
 <td>${j.jg}</td>
