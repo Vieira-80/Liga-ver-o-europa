@@ -39,14 +39,12 @@ body {
   height:3px;
   background:#facc15;
   margin:10px auto 0;
-  border-radius:2px;
 }
 
 h1{
   font-size:28px;
   color:#facc15;
   text-shadow:0 0 15px rgba(250,204,21,0.7);
-  letter-spacing:1px;
 }
 
 /* ADMIN */
@@ -63,7 +61,6 @@ h1{
 /* CARDS */
 .card{
   background: rgba(2,6,23,0.85);
-  backdrop-filter: blur(12px);
   border-radius:18px;
   padding:15px;
   margin-bottom:20px;
@@ -83,7 +80,94 @@ h1{
   border:1px solid rgba(250,204,21,0.1);
 }
 
+/* RESULTADOS */
 .vencedor{
   color:#22c55e;
   font-weight:bold;
-  text-shadow:0 0
+}
+
+.derrotado{
+  color:#ef4444;
+}
+
+/* INPUT */
+input{
+  width:42px;
+  text-align:center;
+  background:#1e293b;
+  border:1px solid #334155;
+  color:white;
+  border-radius:6px;
+}
+
+/* TABELA */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#020617;
+  color:#facc15;
+}
+
+td,th{
+  padding:10px;
+  text-align:center;
+}
+
+td{
+  background:#020617;
+}
+
+/* TOP */
+.top1{ background:#facc15; color:black; font-weight:bold;}
+.top2{ background:#cbd5f5; color:black;}
+.top3{ background:#b45309; color:white;}
+.top8{ background:#1e3a8a;}
+
+</style>
+</head>
+
+<body>
+
+<button id="adminBtn" onclick="login()">⚙️</button>
+
+<div class="header">
+  <img src="FB_IMG_1775512103606.jpg" class="logo">
+  <h1>LIGA DE VERÃO EUROPA</h1>
+</div>
+
+<div id="app"></div>
+
+<script>
+
+const PASSWORD="1234";
+let editavel=false;
+
+function login(){
+let p=prompt("Código operador:");
+if(p===PASSWORD){
+editavel=true;
+alert("Modo operador ativo");
+render();
+}
+}
+
+// FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "liga-verao-salaoeuropa.firebaseapp.com",
+  databaseURL: "https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "liga-verao-salaoeuropa"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+// JOGADORES
+const jogadores=[
+"Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
+"R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
+"Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Gesto","Carlos Leal","Zé Vieira",
+"Ruben Pereira","Flávio","Sér
