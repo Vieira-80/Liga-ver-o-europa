@@ -2,19 +2,22 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Liga de Verão Europa</title>
+<title>Liga de Bilhar</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <style>
 
-/* FUNDO */
+/* 🎱 FUNDO COM TEXTURA */
 body {
   font-family: 'Segoe UI', Arial;
+
   background:
-    radial-gradient(circle at top, rgba(250,204,21,0.12), transparent 40%),
-    linear-gradient(135deg, #020617, #022c22 60%, #064e3b);
+    linear-gradient(rgba(2,6,23,0.85), rgba(2,6,23,0.9)),
+    url("https://www.transparenttextures.com/patterns/felt.png");
+
+  background-color:#064e3b;
   color: #e2e8f0;
   padding: 15px;
 }
@@ -48,12 +51,28 @@ h1{
   opacity:0.4;
 }
 
-/* CARDS */
+/* 🔥 CARDS PREMIUM */
 .card{
   background: rgba(2,6,23,0.85);
   border-radius:16px;
   padding:15px;
   margin-bottom:20px;
+
+  border:1px solid rgba(250,204,21,0.25);
+
+  box-shadow:
+    0 0 0 1px rgba(250,204,21,0.1),
+    0 8px 25px rgba(0,0,0,0.6),
+    0 0 15px rgba(250,204,21,0.08);
+}
+
+.card:hover{
+  border-color:rgba(250,204,21,0.5);
+  box-shadow:
+    0 0 0 1px rgba(250,204,21,0.2),
+    0 10px 30px rgba(0,0,0,0.7),
+    0 0 20px rgba(250,204,21,0.15);
+  transition:0.3s;
 }
 
 /* JOGOS */
