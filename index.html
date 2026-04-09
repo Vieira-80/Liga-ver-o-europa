@@ -9,68 +9,54 @@
 
 <style>
 
-/* 🎱 FUNDO */
+/* FUNDO */
 body {
   font-family: 'Segoe UI', Arial;
-  background:#065f46 url("https://www.transparenttextures.com/patterns/felt.png");
-  color:#e2e8f0;
-  padding:15px;
+  background: radial-gradient(circle at top, #065f46, #022c22);
+  color: #f8fafc;
+  padding: 15px;
 }
 
-/* 🎱 TRIÂNGULO 3D */
-.decoracao-bilhar{
-  position:fixed;
-  top:80px;
-  left:20px;
-  width:140px;
-  height:120px;
-  pointer-events:none;
+/* 🎱 TRIÂNGULO REAL (SEM BUGS) */
+.decoracao {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  width: 140px;
+  opacity: 0.15;
+  pointer-events: none;
 }
-
-/* TRIÂNGULO */
-.triangulo{
-  position:absolute;
-  width:0;
-  height:0;
-  border-left:70px solid transparent;
-  border-right:70px solid transparent;
-  border-bottom:120px solid rgba(255,255,255,0.15);
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
-}
-
-/* BOLAS 3D */
-.bola{
-  position:absolute;
-  width:18px;
-  height:18px;
-  border-radius:50%;
-  box-shadow:
-    inset -4px -4px 6px rgba(0,0,0,0.6),
-    inset 4px 4px 6px rgba(255,255,255,0.3),
-    0 4px 8px rgba(0,0,0,0.5);
-}
-
-/* POSIÇÕES */
-.bola8{ background:#111; top:15px; left:61px;}
-.bola1{ background:#facc15; top:45px; left:40px;}
-.bola2{ background:#ef4444; top:45px; left:80px;}
-.bola3{ background:#3b82f6; top:75px; left:61px;}
 
 /* HEADER */
-.header{text-align:center;margin-bottom:20px;}
-.logo{width:140px;border-radius:12px;box-shadow:0 0 20px rgba(250,204,21,0.4);}
-h1{color:#facc15;}
+.logo{
+  display:block;
+  margin:0 auto 10px auto;
+  width:160px;
+}
+
+h1 {
+  text-align:center;
+  color:#facc15;
+  margin-bottom:15px;
+}
 
 /* BOTÃO */
-#adminBtn{position:fixed;top:10px;right:10px;background:none;border:none;color:#94a3b8;}
+#adminBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  background:none;
+  border:none;
+  color:#94a3b8;
+  opacity:0.5;
+}
 
 /* CARDS */
 .card{
-  background:rgba(2,6,23,0.9);
-  border-radius:16px;
+  background:rgba(15,23,42,0.85);
+  border-radius:14px;
   padding:15px;
   margin-bottom:20px;
-  border:1px solid rgba(250,204,21,0.2);
 }
 
 /* JOGOS */
@@ -79,13 +65,13 @@ h1{color:#facc15;}
   justify-content:space-between;
   background:#020617;
   padding:10px;
-  border-radius:10px;
+  border-radius:8px;
   margin-bottom:6px;
 }
 
 /* RESULTADOS */
-.vencedor{color:#22c55e;font-weight:bold;}
-.derrotado{color:#ef4444;}
+.vencedor{ color:#22c55e; font-weight:bold;}
+.derrotado{ color:#ef4444; }
 
 /* INPUT */
 input{
@@ -98,36 +84,39 @@ input{
 }
 
 /* TABELA */
-table{width:100%;border-collapse:collapse;}
-th{background:#020617;color:#facc15;}
-td,th{padding:10px;text-align:center;}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#020617;
+  color:#facc15;
+}
+
+td,th{
+  padding:10px;
+  text-align:center;
+}
 
 /* TOP */
-.top1{background:#facc15;color:black;}
-.top2{background:#94a3b8;color:black;}
-.top3{background:#b45309;color:white;}
-.top{background:#1e3a8a;}
+.top1{ background:#facc15; color:black;}
+.top2{ background:#94a3b8; color:black;}
+.top3{ background:#b45309; color:white;}
+.top{ background:#1e3a8a;}
 
 </style>
 </head>
 
 <body>
 
-<!-- TRIÂNGULO 3D -->
-<div class="decoracao-bilhar">
-  <div class="triangulo"></div>
-  <div class="bola bola8"></div>
-  <div class="bola bola1"></div>
-  <div class="bola bola2"></div>
-  <div class="bola bola3"></div>
-</div>
+<!-- 🎱 IMAGEM TRIÂNGULO (FUNCIONA SEMPRE) -->
+<img class="decoracao" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Pool_balls_racked.jpg">
 
 <button id="adminBtn" onclick="login()">⚙️</button>
 
-<div class="header">
 <img src="FB_IMG_1775512103606.jpg" class="logo">
-<h1>LIGA DE VERÃO EUROPA</h1>
-</div>
+<h1>🎱 LIGA DE BILHAR 🎱</h1>
 
 <div id="app"></div>
 
@@ -204,14 +193,15 @@ function render(){
 
 let html="";
 
-html+=`<div class="card">
-<h2>🏆 Classificação</h2>
+// CLASSIFICAÇÃO
+html+=`<div class="card"><h2>🏆 Classificação</h2>
 <table id="class">
 <tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
-</table>
-</div>`;
+</table></div>`;
 
+// JORNADAS
 jornadas.forEach((jornada,j)=>{
+
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
 
 jornada.forEach((jogo,i)=>{
@@ -237,10 +227,13 @@ html+=`
 <input data-id="${j}-${i}-2" value="${b}">
 </div>
 <span class="${c2}">${p2}</span>
-</div>`;
+</div>
+`;
+
 });
 
 html+="</div>";
+
 });
 
 document.getElementById("app").innerHTML=html;
@@ -253,6 +246,7 @@ i.oninput=guardar;
 calcular();
 }
 
+// CLASSIFICAÇÃO
 function calcular(){
 
 let stats={};
@@ -300,6 +294,7 @@ let t=document.getElementById("class");
 t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
 
 lista.forEach((j,i)=>{
+
 let classe="";
 if(i===0)classe="top1";
 else if(i===1)classe="top2";
