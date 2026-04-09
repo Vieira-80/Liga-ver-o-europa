@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Liga de Verão Europa</title>
+<title>Liga de Bilhar</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -80,6 +80,7 @@ h1{
   border:1px solid rgba(250,204,21,0.1);
 }
 
+/* RESULTADOS */
 .vencedor{
   color:#22c55e;
   font-weight:bold;
@@ -119,11 +120,36 @@ td{
   background:#020617;
 }
 
-/* TOP */
-.top1{ background:#facc15; color:black; font-weight:bold;}
-.top2{ background:#cbd5f5; color:black;}
-.top3{ background:#b45309; color:white;}
-.top8{ background:#1e3a8a;}
+/* 🔥 TOP 3 (CORRIGIDO TEXTO) */
+.top1 td{
+  background:#facc15 !important;
+  color:#000 !important;
+  font-weight:bold;
+}
+
+.top2 td{
+  background:#e5e7eb !important;
+  color:#000 !important;
+  font-weight:bold;
+}
+
+.top3 td{
+  background:#b45309 !important;
+  color:#fff !important;
+  font-weight:bold;
+}
+
+/* 🔥 TOP 8 (ZONA PRÉMIO) */
+.top8 td{
+  background:linear-gradient(90deg,#1e3a8a,#2563eb) !important;
+  color:white;
+  font-weight:600;
+}
+
+/* 🔥 LINHA LATERAL PARA TOP 8 */
+.top8 td:first-child{
+  border-left:4px solid #facc15;
+}
 
 </style>
 </head>
@@ -153,7 +179,7 @@ render();
 }
 }
 
-// FIREBASE (TEU ORIGINAL - CORRETO)
+// FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
   authDomain: "liga-verao-salaoeuropa.firebaseapp.com",
@@ -196,16 +222,13 @@ const jornadas=gerarJornadas(jogadores);
 
 let dados={};
 
-// 🔥 FIREBASE + FALLBACK
+// FIREBASE + fallback
 db.ref("bilhar").on("value",snap=>{
 dados=snap.val()||{};
 render();
-},()=>{
-render(); // se falhar
-});
+},()=>{ render(); });
 
-// 🔥 GARANTE QUE RENDER CORRE SEMPRE
-setTimeout(render, 1000);
+setTimeout(render,1000);
 
 function guardar(){
 if(!editavel)return;
@@ -221,7 +244,6 @@ function render(){
 
 let html="";
 
-// CLASSIFICAÇÃO
 html+=`
 <div class="card">
 <h2>🏆 Classificação</h2>
@@ -230,7 +252,6 @@ html+=`
 </table>
 </div>`;
 
-// JORNADAS
 jornadas.forEach((jornada,j)=>{
 
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
@@ -277,7 +298,6 @@ i.oninput=guardar;
 calcular();
 }
 
-// CLASSIFICAÇÃO
 function calcular(){
 
 let stats={};
