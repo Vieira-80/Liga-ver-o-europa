@@ -17,13 +17,18 @@ body {
   padding: 15px;
 }
 
-/* 🎱 TRIÂNGULO REAL (SEM BUGS) */
+/* 🎱 TRIÂNGULO SUAVE */
 .decoracao {
   position: fixed;
   top: 80px;
   left: 20px;
-  width: 140px;
-  opacity: 0.15;
+  width: 160px;
+  opacity: 0.08;
+
+  filter:
+    blur(1px)
+    drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+
   pointer-events: none;
 }
 
@@ -57,6 +62,7 @@ h1 {
   border-radius:14px;
   padding:15px;
   margin-bottom:20px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
 }
 
 /* JOGOS */
@@ -99,18 +105,33 @@ td,th{
   text-align:center;
 }
 
-/* TOP */
-.top1{ background:#facc15; color:black;}
-.top2{ background:#94a3b8; color:black;}
-.top3{ background:#b45309; color:white;}
-.top{ background:#1e3a8a;}
+/* 🏆 TOP SUAVE (VERSÃO PREMIUM) */
+.top1 td{
+  background:rgba(250,204,21,0.12);
+  color:#fef08a;
+}
+
+.top2 td{
+  background:rgba(148,163,184,0.12);
+  color:#e2e8f0;
+}
+
+.top3 td{
+  background:rgba(180,83,9,0.12);
+  color:#fdba74;
+}
+
+/* TOP 8 */
+.top td{
+  background:rgba(37,99,235,0.06);
+}
 
 </style>
 </head>
 
 <body>
 
-<!-- 🎱 IMAGEM TRIÂNGULO (FUNCIONA SEMPRE) -->
+<!-- 🎱 TRIÂNGULO -->
 <img class="decoracao" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Pool_balls_racked.jpg">
 
 <button id="adminBtn" onclick="login()">⚙️</button>
@@ -193,15 +214,12 @@ function render(){
 
 let html="";
 
-// CLASSIFICAÇÃO
 html+=`<div class="card"><h2>🏆 Classificação</h2>
 <table id="class">
 <tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
 </table></div>`;
 
-// JORNADAS
 jornadas.forEach((jornada,j)=>{
-
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
 
 jornada.forEach((jogo,i)=>{
@@ -227,13 +245,10 @@ html+=`
 <input data-id="${j}-${i}-2" value="${b}">
 </div>
 <span class="${c2}">${p2}</span>
-</div>
-`;
-
+</div>`;
 });
 
 html+="</div>";
-
 });
 
 document.getElementById("app").innerHTML=html;
@@ -294,7 +309,6 @@ let t=document.getElementById("class");
 t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
 
 lista.forEach((j,i)=>{
-
 let classe="";
 if(i===0)classe="top1";
 else if(i===1)classe="top2";
