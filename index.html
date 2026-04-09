@@ -2,20 +2,20 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Liga de Verão Europa</title>
+<title>Liga de Bilhar</title>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <style>
 
-/* 🎱 FUNDO */
+/* 🎱 FUNDO TORNEIO PROFISSIONAL */
 body {
   font-family: 'Segoe UI', Arial;
 
   background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10), transparent 50%),
-    radial-gradient(circle at top, rgba(250,204,21,0.06), transparent 40%),
+    radial-gradient(circle at 50% -20%, rgba(255,255,255,0.15), transparent 60%),
+    radial-gradient(circle at bottom, rgba(0,0,0,0.4), transparent 60%),
     url("https://www.transparenttextures.com/patterns/felt.png");
 
   background-color:#065f46;
@@ -25,36 +25,46 @@ body {
   position:relative;
 }
 
-/* 🎱 BOLAS */
+/* 🎱 BOLAS PROFISSIONAIS */
 body::before{
   content:"";
   position:fixed;
-  top:60px;
-  left:-10px;
-  width:160px;
-  height:160px;
+  top:80px;
+  left:30px;
+  width:140px;
+  height:140px;
 
-  background:url("https://cdn-icons-png.flaticon.com/512/861/861512.png") no-repeat center/contain;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), #facc15 35%, #a16207 70%),
+    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.8), #ef4444 35%, #7f1d1d 70%);
 
-  opacity:0.14;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+  border-radius:50%;
+  opacity:0.15;
+  filter: blur(0.5px) drop-shadow(0 10px 20px rgba(0,0,0,0.6));
   pointer-events:none;
 }
 
-/* 🎱 TACOS */
+/* 🎱 TACOS PROFISSIONAIS */
 body::after{
   content:"";
   position:fixed;
   top:120px;
-  right:-20px;
-  width:200px;
-  height:350px;
+  right:60px;
+  width:10px;
+  height:320px;
 
-  background:url("https://cdn-icons-png.flaticon.com/512/3103/3103446.png") no-repeat center/contain;
+  background:
+    linear-gradient(to bottom, #facc15, #78350f);
 
-  opacity:0.12;
-  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7));
-  transform:rotate(-12deg);
+  border-radius:5px;
+
+  box-shadow:
+    -14px 50px 0 0 rgba(250,204,21,0.15),
+    -14px 50px 0 2px rgba(120,53,15,0.3),
+    0 10px 25px rgba(0,0,0,0.6);
+
+  transform:rotate(-18deg);
+  opacity:0.2;
   pointer-events:none;
 }
 
@@ -74,7 +84,7 @@ body::after{
 h1{
   font-size:26px;
   color:#facc15;
-  text-shadow:0 0 10px rgba(250,204,21,0.4);
+  text-shadow:0 0 12px rgba(250,204,21,0.6);
 }
 
 /* BOTÃO */
@@ -88,9 +98,9 @@ h1{
   opacity:0.4;
 }
 
-/* CARDS */
+/* CARDS PREMIUM */
 .card{
-  background: rgba(2,6,23,0.88);
+  background: rgba(2,6,23,0.9);
   border-radius:16px;
   padding:15px;
   margin-bottom:20px;
@@ -99,7 +109,8 @@ h1{
 
   box-shadow:
     0 0 0 1px rgba(250,204,21,0.1),
-    0 8px 25px rgba(0,0,0,0.7);
+    0 10px 30px rgba(0,0,0,0.7),
+    0 0 25px rgba(250,204,21,0.08);
 }
 
 /* JOGOS */
