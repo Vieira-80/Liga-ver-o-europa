@@ -9,15 +9,25 @@
 
 <style>
 
-/* 🎱 FUNDO PREMIUM */
+/* 🎱 FUNDO PREMIUM COM IMAGENS */
 body {
   font-family: 'Segoe UI', Arial;
 
   background:
     radial-gradient(circle at 50% -10%, rgba(255,255,255,0.15), transparent 60%),
     radial-gradient(circle at bottom, rgba(0,0,0,0.5), transparent 60%),
-    radial-gradient(circle at top left, rgba(250,204,21,0.08), transparent 40%),
+
+    url("img/bilhar1.png") left 100px no-repeat,
+    url("img/bilhar2.png") right 120px no-repeat,
+
     url("https://www.transparenttextures.com/patterns/felt.png");
+
+  background-size:
+    auto,
+    auto,
+    240px,
+    240px,
+    auto;
 
   background-color:#065f46;
 
@@ -25,15 +35,20 @@ body {
   padding:15px;
 }
 
-/* 🎱 TRIÂNGULO SUAVE */
-.decoracao {
-  position: fixed;
-  top: 80px;
-  left: 20px;
-  width: 160px;
-  opacity: 0.08;
-  filter: blur(1px) drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-  pointer-events: none;
+/* 🔥 OVERLAY PARA SUAVIZAR */
+body::after {
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* GARANTIR CONTEÚDO ACIMA */
+#app, .logo, h1, .card {
+  position:relative;
+  z-index:1;
 }
 
 /* 🏆 LOGO PREMIUM */
@@ -68,9 +83,10 @@ h1 {
   border:none;
   color:#94a3b8;
   opacity:0.5;
+  z-index:2;
 }
 
-/* 🔥 CARDS GLASS PREMIUM */
+/* 🔥 CARDS GLASS */
 .card{
   background: rgba(15,23,42,0.55);
   backdrop-filter: blur(10px);
@@ -149,8 +165,6 @@ td,th{
 </head>
 
 <body>
-
-<img class="decoracao" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Pool_balls_racked.jpg">
 
 <button id="adminBtn" onclick="login()">⚙️</button>
 
