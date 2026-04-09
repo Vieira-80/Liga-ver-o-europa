@@ -9,13 +9,13 @@
 
 <style>
 
-/* 🎱 FUNDO ULTRA REALISTA */
+/* 🎱 FUNDO */
 body {
   font-family: 'Segoe UI', Arial;
 
   background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12), transparent 50%),
-    radial-gradient(circle at top, rgba(250,204,21,0.08), transparent 40%),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10), transparent 50%),
+    radial-gradient(circle at top, rgba(250,204,21,0.06), transparent 40%),
     url("https://www.transparenttextures.com/patterns/felt.png");
 
   background-color:#065f46;
@@ -23,39 +23,38 @@ body {
   color: #e2e8f0;
   padding: 15px;
   position:relative;
-  overflow-x:hidden;
 }
 
-/* 🎱 BOLAS REALISTAS */
+/* 🎱 BOLAS */
 body::before{
   content:"";
   position:fixed;
-  top:70px;
-  left:-20px;
-  width:180px;
-  height:180px;
+  top:60px;
+  left:-10px;
+  width:160px;
+  height:160px;
 
-  background:url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Pool_balls_set.png/512px-Pool_balls_set.png") no-repeat center/contain;
+  background:url("https://cdn-icons-png.flaticon.com/512/861/861512.png") no-repeat center/contain;
 
-  opacity:0.18;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
+  opacity:0.14;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
   pointer-events:none;
 }
 
-/* 🎱 TACOS REALISTAS */
+/* 🎱 TACOS */
 body::after{
   content:"";
   position:fixed;
   top:120px;
-  right:-30px;
-  width:220px;
-  height:400px;
+  right:-20px;
+  width:200px;
+  height:350px;
 
-  background:url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Pool_cue.png/512px-Pool_cue.png") no-repeat center/contain;
+  background:url("https://cdn-icons-png.flaticon.com/512/3103/3103446.png") no-repeat center/contain;
 
-  opacity:0.15;
-  filter: drop-shadow(0 15px 20px rgba(0,0,0,0.7));
-  transform:rotate(-15deg);
+  opacity:0.12;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7));
+  transform:rotate(-12deg);
   pointer-events:none;
 }
 
@@ -89,7 +88,7 @@ h1{
   opacity:0.4;
 }
 
-/* 🔥 CARDS PREMIUM */
+/* CARDS */
 .card{
   background: rgba(2,6,23,0.88);
   border-radius:16px;
@@ -100,8 +99,7 @@ h1{
 
   box-shadow:
     0 0 0 1px rgba(250,204,21,0.1),
-    0 8px 25px rgba(0,0,0,0.7),
-    0 0 20px rgba(250,204,21,0.08);
+    0 8px 25px rgba(0,0,0,0.7);
 }
 
 /* JOGOS */
@@ -149,9 +147,9 @@ td{
   background:#020617;
 }
 
-/* TOPS */
+/* TOPS SUAVES */
 .top1 td{ background:rgba(250,204,21,0.15); color:#facc15;}
-.top2 td{ background:rgba(148,163,184,0.15); color:#cbd5f5;}
+.top2 td{ background:rgba(148,163,184,0.15); color:#e2e8f0;}
 .top3 td{ background:rgba(180,83,9,0.15); color:#fdba74;}
 .top8 td{ background:rgba(37,99,235,0.08);}
 
@@ -234,7 +232,17 @@ let ultimaClassificacao={};
 db.ref("bilhar").on("value",snap=>{
 dados=snap.val()||{};
 render();
-},()=>{render();});
+});
+
+function guardar(){
+if(!editavel)return;
+
+document.querySelectorAll("input").forEach(i=>{
+dados[i.dataset.id]=i.value;
+});
+
+db.ref("bilhar").set(dados);
+}
 
 function render(){
 
@@ -259,15 +267,21 @@ let p2=jogo[1];
 let a=dados[`${j}-${i}-1`]||"";
 let b=dados[`${j}-${i}-2`]||"";
 
+let c1="",c2="";
+if(a!=="" && b!==""){
+if(Number(a)>Number(b)){c1="vencedor";c2="derrotado";}
+else if(Number(b)>Number(a)){c2="vencedor";c1="derrotado";}
+}
+
 html+=`
 <div class="jogo">
-<span>${p1}</span>
+<span class="${c1}">${p1}</span>
 <div>
 <input data-id="${j}-${i}-1" value="${a}">
 -
 <input data-id="${j}-${i}-2" value="${b}">
 </div>
-<span>${p2}</span>
+<span class="${c2}">${p2}</span>
 </div>`;
 });
 
@@ -284,20 +298,43 @@ i.oninput=guardar;
 calcular();
 }
 
-function guardar(){
-if(!editavel)return;
-document.querySelectorAll("input").forEach(i=>{
-dados[i.dataset.id]=i.value;
-});
-db.ref("bilhar").set(dados);
-}
-
 function calcular(){
 
 let stats={};
 
 jogadores.forEach(j=>{
 stats[j]={jg:0,v:0,d:0,pts:0};
+});
+
+jornadas.forEach((jornada,j)=>{
+jornada.forEach((jogo,i)=>{
+
+let p1=jogo[0];
+let p2=jogo[1];
+
+let a=dados[`${j}-${i}-1`];
+let b=dados[`${j}-${i}-2`];
+
+if(a!=="" && b!==""){
+
+let va=Number(a),vb=Number(b);
+
+stats[p1].jg++;
+stats[p2].jg++;
+
+if(va>vb){
+stats[p1].v++;
+stats[p2].d++;
+stats[p1].pts+=3;
+}else{
+stats[p2].v++;
+stats[p1].d++;
+stats[p2].pts+=3;
+}
+
+}
+
+});
 });
 
 let lista = jogadores.map(nome => ({
