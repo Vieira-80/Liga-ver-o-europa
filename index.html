@@ -1,11 +1,20 @@
-<!DOCTYPE html><html lang="pt">
+<!DOCTYPE html>
+<html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Liga de Bilhar</title><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script><style>
+<title>Liga de Bilhar</title>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<style>
+
+/* FUNDO PREMIUM */
 body {
   font-family: 'Segoe UI', Arial;
-  background: radial-gradient(circle at top, #065f46, #022c22);
+  background:
+    radial-gradient(circle at top, rgba(250,204,21,0.15), transparent 40%),
+    linear-gradient(135deg, #020617, #022c22 60%, #064e3b);
   color: #f8fafc;
   padding: 15px;
 }
@@ -23,6 +32,7 @@ h1 {
   text-align:center;
   color:#facc15;
   margin-bottom:15px;
+  text-shadow:0 0 15px rgba(250,204,21,0.6);
 }
 
 /* BOTÃO ADMIN */
@@ -33,41 +43,60 @@ h1 {
   background:none;
   border:none;
   color:#94a3b8;
-  opacity:0.5;
+  opacity:0.4;
+  font-size:18px;
 }
 
-/* CARDS */
+/* CARDS PREMIUM */
 .card{
-  background:rgba(15,23,42,0.85);
-  backdrop-filter: blur(8px);
-  border-radius:14px;
+  background: rgba(2,6,23,0.85);
+  backdrop-filter: blur(12px);
+  border-radius:18px;
   padding:15px;
   margin-bottom:20px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.5);
+  box-shadow:0 10px 30px rgba(0,0,0,0.7);
+  border:1px solid rgba(250,204,21,0.2);
 }
 
 /* JOGOS */
 .jogo{
   display:flex;
   justify-content:space-between;
-  background:#020617;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:6px;
+  align-items:center;
+  background: linear-gradient(90deg,#020617,#0f172a);
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  border:1px solid rgba(250,204,21,0.1);
+  transition: all 0.2s ease;
 }
 
+.jogo:hover{
+  transform:scale(1.01);
+  border-color:rgba(250,204,21,0.4);
+}
+
+/* INPUT */
 input{
   width:42px;
   text-align:center;
-  background:#334155;
-  border:none;
+  background:#1e293b;
+  border:1px solid #334155;
   color:white;
   border-radius:6px;
 }
 
 /* RESULTADOS */
-.vencedor{ color:#22c55e; font-weight:bold;}
-.derrotado{ color:#ef4444; }
+.vencedor{
+  color:#22c55e;
+  font-weight:bold;
+  text-shadow:0 0 8px rgba(34,197,94,0.7);
+}
+
+.derrotado{
+  color:#ef4444;
+  opacity:0.8;
+}
 
 /* TABELA */
 table{
@@ -79,6 +108,7 @@ table{
 th{
   background:#020617;
   color:#facc15;
+  font-size:14px;
 }
 
 td,th{
@@ -86,15 +116,30 @@ td,th{
   text-align:center;
 }
 
+td{
+  background:#020617;
+}
+
 /* TOP */
-.top1{ background:#facc15; color:black;}
+.top1{ background:#facc15; color:black; font-weight:bold;}
 .top2{ background:#94a3b8; color:black;}
 .top3{ background:#b45309; color:white;}
 .top{ background:#1e3a8a;}
 
-</style></head><body><button id="adminBtn" onclick="login()">⚙️</button>
+</style>
+</head>
 
-<!-- 🔥 LOGO --><img src="FB_IMG_1775512103606.jpg" class="logo"><h1>🎱 LIGA DE BILHAR 🎱</h1><div id="app"></div><script>
+<body>
+
+<button id="adminBtn" onclick="login()">⚙️</button>
+
+<img src="FB_IMG_1775512103606.jpg" class="logo">
+
+<h1>🎱 LIGA DE VERÃO EUROPA 🎱</h1>
+
+<div id="app"></div>
+
+<script>
 
 const PASSWORD="1234";
 let editavel=false;
@@ -128,7 +173,7 @@ const jogadores=[
 "Jogador25","Jogador26"
 ];
 
-// JORNADAS
+// GERAR JORNADAS
 function gerarJornadas(lista){
 let arr=[...lista];
 let jornadas=[];
@@ -290,5 +335,6 @@ t.innerHTML+=`
 
 }
 
-</script></body>
+</script>
+</body>
 </html>
