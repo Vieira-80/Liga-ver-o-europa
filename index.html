@@ -9,124 +9,69 @@
 
 <style>
 
-/* 🎱 FUNDO TORNEIO PROFISSIONAL */
+/* 🎱 FUNDO */
 body {
   font-family: 'Segoe UI', Arial;
 
   background:
-    radial-gradient(circle at 50% -20%, rgba(255,255,255,0.15), transparent 60%),
-    radial-gradient(circle at bottom, rgba(0,0,0,0.4), transparent 60%),
+    radial-gradient(circle at 50% -20%, rgba(255,255,255,0.12), transparent 60%),
     url("https://www.transparenttextures.com/patterns/felt.png");
 
   background-color:#065f46;
-
-  color: #e2e8f0;
-  padding: 15px;
-  position:relative;
+  color:#e2e8f0;
+  padding:15px;
 }
 
-/* 🎱 BOLAS PROFISSIONAIS */
+/* 🎱 TRIÂNGULO */
 body::before{
   content:"";
   position:fixed;
   top:80px;
-  left:30px;
-  width:140px;
-  height:140px;
+  left:40px;
+  width:130px;
+  height:130px;
 
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), #facc15 35%, #a16207 70%),
-    radial-gradient(circle at 70% 70%, rgba(255,255,255,0.8), #ef4444 35%, #7f1d1d 70%);
+    radial-gradient(circle at 50% 50%, #000 8%, transparent 9%),
+    radial-gradient(circle at 30% 30%, #facc15 10%, transparent 11%),
+    radial-gradient(circle at 70% 30%, #ef4444 10%, transparent 11%),
+    radial-gradient(circle at 50% 70%, #3b82f6 10%, transparent 11%);
 
-  border-radius:50%;
-  opacity:0.15;
-  filter: blur(0.5px) drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-  pointer-events:none;
-}
-
-/* 🎱 TACOS PROFISSIONAIS */
-body::after{
-  content:"";
-  position:fixed;
-  top:120px;
-  right:60px;
-  width:10px;
-  height:320px;
-
-  background:
-    linear-gradient(to bottom, #facc15, #78350f);
-
-  border-radius:5px;
-
-  box-shadow:
-    -14px 50px 0 0 rgba(250,204,21,0.15),
-    -14px 50px 0 2px rgba(120,53,15,0.3),
-    0 10px 25px rgba(0,0,0,0.6);
-
-  transform:rotate(-18deg);
-  opacity:0.2;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  opacity:0.12;
   pointer-events:none;
 }
 
 /* HEADER */
-.header{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.logo{
-  width:140px;
-  margin-bottom:10px;
-  border-radius:12px;
-  box-shadow:0 0 25px rgba(250,204,21,0.5);
-}
-
-h1{
-  font-size:26px;
-  color:#facc15;
-  text-shadow:0 0 12px rgba(250,204,21,0.6);
-}
+.header{text-align:center;margin-bottom:20px;}
+.logo{width:140px;border-radius:12px;box-shadow:0 0 20px rgba(250,204,21,0.4);}
+h1{color:#facc15;}
 
 /* BOTÃO */
-#adminBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  background:none;
-  border:none;
-  color:#94a3b8;
-  opacity:0.4;
-}
+#adminBtn{position:fixed;top:10px;right:10px;background:none;border:none;color:#94a3b8;opacity:0.4;}
 
-/* CARDS PREMIUM */
+/* CARDS */
 .card{
-  background: rgba(2,6,23,0.9);
+  background:rgba(2,6,23,0.9);
   border-radius:16px;
   padding:15px;
   margin-bottom:20px;
-
-  border:1px solid rgba(250,204,21,0.25);
-
-  box-shadow:
-    0 0 0 1px rgba(250,204,21,0.1),
-    0 10px 30px rgba(0,0,0,0.7),
-    0 0 25px rgba(250,204,21,0.08);
+  border:1px solid rgba(250,204,21,0.2);
 }
 
 /* JOGOS */
 .jogo{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  background: rgba(15,23,42,0.7);
+  background:rgba(15,23,42,0.7);
   padding:10px;
   border-radius:10px;
   margin-bottom:6px;
 }
 
 /* RESULTADOS */
-.vencedor{ color:#22c55e; font-weight:bold;}
-.derrotado{ color:#ef4444; }
+.vencedor{color:#22c55e;font-weight:bold;}
+.derrotado{color:#ef4444;}
 
 /* INPUT */
 input{
@@ -139,34 +84,20 @@ input{
 }
 
 /* TABELA */
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+table{width:100%;border-collapse:collapse;}
+th{background:#020617;color:#facc15;}
+td,th{padding:10px;text-align:center;}
+td{background:#020617;}
 
-th{
-  background:#020617;
-  color:#facc15;
-}
-
-td,th{
-  padding:10px;
-  text-align:center;
-}
-
-td{
-  background:#020617;
-}
-
-/* TOPS SUAVES */
-.top1 td{ background:rgba(250,204,21,0.15); color:#facc15;}
-.top2 td{ background:rgba(148,163,184,0.15); color:#e2e8f0;}
-.top3 td{ background:rgba(180,83,9,0.15); color:#fdba74;}
-.top8 td{ background:rgba(37,99,235,0.08);}
+/* TOPS */
+.top1 td{background:rgba(250,204,21,0.15);}
+.top2 td{background:rgba(148,163,184,0.15);}
+.top3 td{background:rgba(180,83,9,0.15);}
+.top8 td{background:rgba(37,99,235,0.08);}
 
 /* SETAS */
-.seta-up{ color:#4ade80; margin-left:6px; font-size:12px;}
-.seta-down{ color:#f87171; margin-left:6px; font-size:12px;}
+.seta-up{color:#4ade80;margin-left:6px;font-size:12px;}
+.seta-down{color:#f87171;margin-left:6px;font-size:12px;}
 
 </style>
 </head>
@@ -176,8 +107,8 @@ td{
 <button id="adminBtn" onclick="login()">⚙️</button>
 
 <div class="header">
-  <img src="FB_IMG_1775512103606.jpg" class="logo">
-  <h1>LIGA DE VERÃO EUROPA</h1>
+<img src="FB_IMG_1775512103606.jpg" class="logo">
+<h1>LIGA DE VERÃO EUROPA</h1>
 </div>
 
 <div id="app"></div>
@@ -191,7 +122,6 @@ function login(){
 let p=prompt("Código operador:");
 if(p===PASSWORD){
 editavel=true;
-alert("Modo operador ativo");
 render();
 }
 }
@@ -216,7 +146,7 @@ const jogadores=[
 "Jogador25","Jogador26"
 ];
 
-// GERAR JORNADAS
+// JORNADAS
 function gerarJornadas(lista){
 let arr=[...lista];
 let jornadas=[];
@@ -247,11 +177,9 @@ render();
 
 function guardar(){
 if(!editavel)return;
-
 document.querySelectorAll("input").forEach(i=>{
 dados[i.dataset.id]=i.value;
 });
-
 db.ref("bilhar").set(dados);
 }
 
@@ -272,6 +200,7 @@ jornadas.forEach((jornada,j)=>{
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
 
 jornada.forEach((jogo,i)=>{
+
 let p1=jogo[0];
 let p2=jogo[1];
 
@@ -348,11 +277,7 @@ stats[p2].pts+=3;
 });
 });
 
-let lista = jogadores.map(nome => ({
-  nome,
-  ...(stats[nome] || {jg:0,v:0,d:0,pts:0})
-}));
-
+let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
 lista.sort((a,b)=>b.pts-a.pts);
 
 let t=document.getElementById("class");
@@ -360,37 +285,21 @@ let t=document.getElementById("class");
 t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
 
 lista.forEach((j,i)=>{
-
 let classe="";
-let medalha="";
-let seta="";
-
-let antiga = ultimaClassificacao[j.nome];
-
-if(antiga !== undefined){
-  if(i < antiga) seta=`<span class="seta-up">▲</span>`;
-  else if(i > antiga) seta=`<span class="seta-down">▼</span>`;
-}
-
-if(i===0){classe="top1"; medalha="🥇";}
-else if(i===1){classe="top2"; medalha="🥈";}
-else if(i===2){classe="top3"; medalha="🥉";}
-else if(i<8){classe="top8";}
+if(i===0)classe="top1";
+else if(i===1)classe="top2";
+else if(i===2)classe="top3";
+else if(i<8)classe="top8";
 
 t.innerHTML+=`
 <tr class="${classe}">
-<td>${medalha || i+1}</td>
-<td>${j.nome} ${seta}</td>
+<td>${i+1}</td>
+<td>${j.nome}</td>
 <td>${j.jg}</td>
 <td>${j.v}</td>
 <td>${j.d}</td>
 <td>${j.pts}</td>
 </tr>`;
-});
-
-ultimaClassificacao={};
-lista.forEach((j,i)=>{
-ultimaClassificacao[j.nome]=i;
 });
 
 }
