@@ -9,12 +9,20 @@
 
 <style>
 
-/* FUNDO */
+/* 🎱 FUNDO PREMIUM */
 body {
   font-family: 'Segoe UI', Arial;
-  background: radial-gradient(circle at top, #065f46, #022c22);
-  color: #f8fafc;
-  padding: 15px;
+
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255,255,255,0.15), transparent 60%),
+    radial-gradient(circle at bottom, rgba(0,0,0,0.5), transparent 60%),
+    radial-gradient(circle at top left, rgba(250,204,21,0.08), transparent 40%),
+    url("https://www.transparenttextures.com/patterns/felt.png");
+
+  background-color:#065f46;
+
+  color:#f8fafc;
+  padding:15px;
 }
 
 /* 🎱 TRIÂNGULO SUAVE */
@@ -24,21 +32,27 @@ body {
   left: 20px;
   width: 160px;
   opacity: 0.08;
-
-  filter:
-    blur(1px)
-    drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-
+  filter: blur(1px) drop-shadow(0 10px 20px rgba(0,0,0,0.6));
   pointer-events: none;
 }
 
-/* HEADER */
+/* 🏆 LOGO PREMIUM */
 .logo{
   display:block;
   margin:0 auto 10px auto;
   width:160px;
+  border-radius:14px;
+
+  box-shadow:
+    0 0 0 2px rgba(250,204,21,0.25),
+    0 0 25px rgba(250,204,21,0.25),
+    0 10px 25px rgba(0,0,0,0.6);
+
+  background:rgba(0,0,0,0.3);
+  padding:6px;
 }
 
+/* TÍTULO */
 h1 {
   text-align:center;
   color:#facc15;
@@ -56,22 +70,29 @@ h1 {
   opacity:0.5;
 }
 
-/* CARDS */
+/* 🔥 CARDS GLASS PREMIUM */
 .card{
-  background:rgba(15,23,42,0.85);
-  border-radius:14px;
+  background: rgba(15,23,42,0.55);
+  backdrop-filter: blur(10px);
+
+  border-radius:16px;
   padding:15px;
   margin-bottom:20px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+
+  border:1px solid rgba(250,204,21,0.15);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.6),
+    0 0 20px rgba(250,204,21,0.05);
 }
 
 /* JOGOS */
 .jogo{
   display:flex;
   justify-content:space-between;
-  background:#020617;
+  background:rgba(2,6,23,0.8);
   padding:10px;
-  border-radius:8px;
+  border-radius:10px;
   margin-bottom:6px;
 }
 
@@ -83,8 +104,8 @@ h1 {
 input{
   width:42px;
   text-align:center;
-  background:#334155;
-  border:none;
+  background:#1e293b;
+  border:1px solid #334155;
   color:white;
   border-radius:6px;
 }
@@ -105,7 +126,7 @@ td,th{
   text-align:center;
 }
 
-/* 🏆 TOP SUAVE (VERSÃO PREMIUM) */
+/* 🏆 TOP SUAVE */
 .top1 td{
   background:rgba(250,204,21,0.12);
   color:#fef08a;
@@ -113,7 +134,6 @@ td,th{
 
 .top2 td{
   background:rgba(148,163,184,0.12);
-  color:#e2e8f0;
 }
 
 .top3 td{
@@ -121,7 +141,6 @@ td,th{
   color:#fdba74;
 }
 
-/* TOP 8 */
 .top td{
   background:rgba(37,99,235,0.06);
 }
@@ -131,7 +150,6 @@ td,th{
 
 <body>
 
-<!-- 🎱 TRIÂNGULO -->
 <img class="decoracao" src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Pool_balls_racked.jpg">
 
 <button id="adminBtn" onclick="login()">⚙️</button>
@@ -261,7 +279,6 @@ i.oninput=guardar;
 calcular();
 }
 
-// CLASSIFICAÇÃO
 function calcular(){
 
 let stats={};
