@@ -17,38 +17,48 @@ body {
   padding:15px;
 }
 
-/* 🎱 TRIÂNGULO REAL */
+/* 🎱 TRIÂNGULO 3D */
 .decoracao-bilhar{
   position:fixed;
   top:80px;
   left:20px;
-  width:0;
-  height:0;
-
-  border-left:70px solid transparent;
-  border-right:70px solid transparent;
-  border-bottom:120px solid rgba(255,255,255,0.15);
-
+  width:140px;
+  height:120px;
   pointer-events:none;
 }
 
-/* BOLAS */
-.bola{
+/* TRIÂNGULO */
+.triangulo{
   position:absolute;
-  width:16px;
-  height:16px;
-  border-radius:50%;
+  width:0;
+  height:0;
+  border-left:70px solid transparent;
+  border-right:70px solid transparent;
+  border-bottom:120px solid rgba(255,255,255,0.15);
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
 }
 
-/* POSIÇÕES REAIS */
-.bola8{ background:#111; top:15px; left:-8px;}
-.bola1{ background:#facc15; top:45px; left:-25px;}
-.bola2{ background:#ef4444; top:45px; left:10px;}
-.bola3{ background:#3b82f6; top:75px; left:-8px;}
+/* BOLAS 3D */
+.bola{
+  position:absolute;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  box-shadow:
+    inset -4px -4px 6px rgba(0,0,0,0.6),
+    inset 4px 4px 6px rgba(255,255,255,0.3),
+    0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* POSIÇÕES */
+.bola8{ background:#111; top:15px; left:61px;}
+.bola1{ background:#facc15; top:45px; left:40px;}
+.bola2{ background:#ef4444; top:45px; left:80px;}
+.bola3{ background:#3b82f6; top:75px; left:61px;}
 
 /* HEADER */
 .header{text-align:center;margin-bottom:20px;}
-.logo{width:140px;border-radius:12px;}
+.logo{width:140px;border-radius:12px;box-shadow:0 0 20px rgba(250,204,21,0.4);}
 h1{color:#facc15;}
 
 /* BOTÃO */
@@ -60,6 +70,7 @@ h1{color:#facc15;}
   border-radius:16px;
   padding:15px;
   margin-bottom:20px;
+  border:1px solid rgba(250,204,21,0.2);
 }
 
 /* JOGOS */
@@ -102,8 +113,9 @@ td,th{padding:10px;text-align:center;}
 
 <body>
 
-<!-- TRIÂNGULO -->
+<!-- TRIÂNGULO 3D -->
 <div class="decoracao-bilhar">
+  <div class="triangulo"></div>
   <div class="bola bola8"></div>
   <div class="bola bola1"></div>
   <div class="bola bola2"></div>
@@ -152,7 +164,7 @@ const jogadores=[
 "Jogador25","Jogador26"
 ];
 
-// GERAR JORNADAS
+// JORNADAS
 function gerarJornadas(lista){
 let arr=[...lista];
 let jornadas=[];
@@ -194,28 +206,37 @@ let html="";
 
 html+=`<div class="card">
 <h2>🏆 Classificação</h2>
-<table id="class"></table>
+<table id="class">
+<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
+</table>
 </div>`;
 
 jornadas.forEach((jornada,j)=>{
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
 
 jornada.forEach((jogo,i)=>{
+
 let p1=jogo[0];
 let p2=jogo[1];
 
 let a=dados[`${j}-${i}-1`]||"";
 let b=dados[`${j}-${i}-2`]||"";
 
+let c1="",c2="";
+if(a!=="" && b!==""){
+if(Number(a)>Number(b)){c1="vencedor";c2="derrotado";}
+else if(Number(b)>Number(a)){c2="vencedor";c1="derrotado";}
+}
+
 html+=`
 <div class="jogo">
-<span>${p1}</span>
+<span class="${c1}">${p1}</span>
 <div>
 <input data-id="${j}-${i}-1" value="${a}">
 -
 <input data-id="${j}-${i}-2" value="${b}">
 </div>
-<span>${p2}</span>
+<span class="${c2}">${p2}</span>
 </div>`;
 });
 
@@ -227,6 +248,73 @@ document.getElementById("app").innerHTML=html;
 document.querySelectorAll("input").forEach(i=>{
 i.disabled=!editavel;
 i.oninput=guardar;
+});
+
+calcular();
+}
+
+function calcular(){
+
+let stats={};
+
+jogadores.forEach(j=>{
+stats[j]={jg:0,v:0,d:0,pts:0};
+});
+
+jornadas.forEach((jornada,j)=>{
+jornada.forEach((jogo,i)=>{
+
+let p1=jogo[0];
+let p2=jogo[1];
+
+let a=dados[`${j}-${i}-1`];
+let b=dados[`${j}-${i}-2`];
+
+if(a!=="" && b!==""){
+
+let va=Number(a),vb=Number(b);
+
+stats[p1].jg++;
+stats[p2].jg++;
+
+if(va>vb){
+stats[p1].v++;
+stats[p2].d++;
+stats[p1].pts+=3;
+}else{
+stats[p2].v++;
+stats[p1].d++;
+stats[p2].pts+=3;
+}
+
+}
+
+});
+});
+
+let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
+lista.sort((a,b)=>b.pts-a.pts);
+
+let t=document.getElementById("class");
+
+t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
+
+lista.forEach((j,i)=>{
+let classe="";
+if(i===0)classe="top1";
+else if(i===1)classe="top2";
+else if(i===2)classe="top3";
+else if(i<8)classe="top";
+
+t.innerHTML+=`
+<tr class="${classe}">
+<td>${i+1}</td>
+<td>${j.nome}</td>
+<td>${j.jg}</td>
+<td>${j.v}</td>
+<td>${j.d}</td>
+<td>${j.pts}</td>
+</tr>`;
 });
 
 }
