@@ -20,42 +20,90 @@ body {
   background-color:#065f46;
   color:#e2e8f0;
   padding:15px;
-  position:relative;
 }
 
-/* 🎱 TRIÂNGULO VISÍVEL */
-body::before{
-  content:"";
+/* 🎱 DECORAÇÃO */
+.decoracao-bilhar{
   position:fixed;
   top:90px;
-  left:30px;
-  width:140px;
-  height:120px;
-
-  background:
-    radial-gradient(circle, #111 6px, transparent 7px) 50% 20%,
-    radial-gradient(circle, #facc15 6px, transparent 7px) 35% 45%,
-    radial-gradient(circle, #ef4444 6px, transparent 7px) 65% 45%,
-    radial-gradient(circle, #3b82f6 6px, transparent 7px) 50% 70%;
-
-  background-repeat:no-repeat;
-
-  border:2px solid rgba(255,255,255,0.25);
-  border-bottom:4px solid rgba(255,255,255,0.25);
-
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-
-  opacity:0.25;
+  left:20px;
+  width:150px;
+  height:150px;
   pointer-events:none;
+  opacity:0.25;
+}
+
+/* TRIÂNGULO */
+.triangulo{
+  position:relative;
+  width:100%;
+  height:100%;
+  border:2px solid rgba(255,255,255,0.3);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* BOLAS */
+.bola{
+  position:absolute;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  box-shadow:0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* POSIÇÕES */
+.bola8{
+  background:#111;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+.amarela{
+  background:#facc15;
+  top:45%;
+  left:30%;
+}
+
+.vermelha{
+  background:#ef4444;
+  top:45%;
+  right:30%;
+}
+
+.azul{
+  background:#3b82f6;
+  bottom:15%;
+  left:50%;
+  transform:translateX(-50%);
 }
 
 /* HEADER */
-.header{text-align:center;margin-bottom:20px;}
-.logo{width:140px;border-radius:12px;box-shadow:0 0 20px rgba(250,204,21,0.4);}
-h1{color:#facc15;}
+.header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.logo{
+  width:140px;
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(250,204,21,0.4);
+}
+
+h1{
+  color:#facc15;
+}
 
 /* BOTÃO */
-#adminBtn{position:fixed;top:10px;right:10px;background:none;border:none;color:#94a3b8;opacity:0.4;}
+#adminBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  background:none;
+  border:none;
+  color:#94a3b8;
+  opacity:0.4;
+}
 
 /* CARDS */
 .card{
@@ -91,10 +139,24 @@ input{
 }
 
 /* TABELA */
-table{width:100%;border-collapse:collapse;}
-th{background:#020617;color:#facc15;}
-td,th{padding:10px;text-align:center;}
-td{background:#020617;}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:#020617;
+  color:#facc15;
+}
+
+td,th{
+  padding:10px;
+  text-align:center;
+}
+
+td{
+  background:#020617;
+}
 
 /* TOPS */
 .top1 td{background:rgba(250,204,21,0.15);}
@@ -102,20 +164,26 @@ td{background:#020617;}
 .top3 td{background:rgba(180,83,9,0.15);}
 .top8 td{background:rgba(37,99,235,0.08);}
 
-/* SETAS */
-.seta-up{color:#4ade80;margin-left:6px;font-size:12px;}
-.seta-down{color:#f87171;margin-left:6px;font-size:12px;}
-
 </style>
 </head>
 
 <body>
 
+<!-- 🎱 TRIÂNGULO -->
+<div class="decoracao-bilhar">
+  <div class="triangulo">
+    <span class="bola bola8"></span>
+    <span class="bola amarela"></span>
+    <span class="bola vermelha"></span>
+    <span class="bola azul"></span>
+  </div>
+</div>
+
 <button id="adminBtn" onclick="login()">⚙️</button>
 
 <div class="header">
-<img src="FB_IMG_1775512103606.jpg" class="logo">
-<h1>LIGA DE VERÃO EUROPA</h1>
+  <img src="FB_IMG_1775512103606.jpg" class="logo">
+  <h1>LIGA DE VERÃO EUROPA</h1>
 </div>
 
 <div id="app"></div>
