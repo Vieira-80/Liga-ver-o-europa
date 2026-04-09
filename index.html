@@ -80,7 +80,6 @@ h1{
   border:1px solid rgba(250,204,21,0.1);
 }
 
-/* RESULTADOS */
 .vencedor{
   color:#22c55e;
   font-weight:bold;
@@ -154,9 +153,9 @@ render();
 }
 }
 
-// FIREBASE
+// FIREBASE (TEU ORIGINAL - CORRETO)
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
+  apiKey: "AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
   authDomain: "liga-verao-salaoeuropa.firebaseapp.com",
   databaseURL: "https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "liga-verao-salaoeuropa"
@@ -170,4 +169,190 @@ const jogadores=[
 "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
 "R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
 "Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Gesto","Carlos Leal","Zé Vieira",
-"Ruben Pereira","Flávio","Sér
+"Ruben Pereira","Flávio","Sérgio Filipe","Santiago","Paulo Martins","Nuno Continental",
+"Jogador25","Jogador26"
+];
+
+// GERAR JORNADAS
+function gerarJornadas(lista){
+let arr=[...lista];
+let jornadas=[];
+if(arr.length%2!==0)arr.push(null);
+
+for(let i=0;i<arr.length-1;i++){
+let jornada=[];
+for(let j=0;j<arr.length/2;j++){
+let a=arr[j];
+let b=arr[arr.length-1-j];
+if(a && b) jornada.push([a,b]);
+}
+arr.splice(1,0,arr.pop());
+jornadas.push(jornada);
+}
+return jornadas;
+}
+
+const jornadas=gerarJornadas(jogadores);
+
+let dados={};
+
+// 🔥 FIREBASE + FALLBACK
+db.ref("bilhar").on("value",snap=>{
+dados=snap.val()||{};
+render();
+},()=>{
+render(); // se falhar
+});
+
+// 🔥 GARANTE QUE RENDER CORRE SEMPRE
+setTimeout(render, 1000);
+
+function guardar(){
+if(!editavel)return;
+
+document.querySelectorAll("input").forEach(i=>{
+dados[i.dataset.id]=i.value;
+});
+
+db.ref("bilhar").set(dados);
+}
+
+function render(){
+
+let html="";
+
+// CLASSIFICAÇÃO
+html+=`
+<div class="card">
+<h2>🏆 Classificação</h2>
+<table id="class">
+<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
+</table>
+</div>`;
+
+// JORNADAS
+jornadas.forEach((jornada,j)=>{
+
+html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
+
+jornada.forEach((jogo,i)=>{
+
+let p1=jogo[0];
+let p2=jogo[1];
+
+let a=dados[`${j}-${i}-1`]||"";
+let b=dados[`${j}-${i}-2`]||"";
+
+let c1="",c2="";
+if(a!=="" && b!==""){
+if(Number(a)>Number(b)){c1="vencedor";c2="derrotado";}
+else if(Number(b)>Number(a)){c2="vencedor";c1="derrotado";}
+}
+
+html+=`
+<div class="jogo">
+<span class="${c1}">${p1}</span>
+<div>
+<input data-id="${j}-${i}-1" value="${a}">
+-
+<input data-id="${j}-${i}-2" value="${b}">
+</div>
+<span class="${c2}">${p2}</span>
+</div>
+`;
+
+});
+
+html+="</div>";
+
+});
+
+document.getElementById("app").innerHTML=html;
+
+document.querySelectorAll("input").forEach(i=>{
+i.disabled=!editavel;
+i.oninput=guardar;
+});
+
+calcular();
+}
+
+// CLASSIFICAÇÃO
+function calcular(){
+
+let stats={};
+
+jogadores.forEach(j=>{
+stats[j]={jg:0,v:0,d:0,pts:0};
+});
+
+jornadas.forEach((jornada,j)=>{
+jornada.forEach((jogo,i)=>{
+
+let p1=jogo[0];
+let p2=jogo[1];
+
+let a=dados[`${j}-${i}-1`];
+let b=dados[`${j}-${i}-2`];
+
+if(a!=="" && b!==""){
+
+let va=Number(a),vb=Number(b);
+
+stats[p1].jg++;
+stats[p2].jg++;
+
+if(va>vb){
+stats[p1].v++;
+stats[p2].d++;
+stats[p1].pts+=3;
+}else{
+stats[p2].v++;
+stats[p1].d++;
+stats[p2].pts+=3;
+}
+
+}
+
+});
+});
+
+let lista = jogadores.map(nome => ({
+  nome,
+  ...(stats[nome] || {jg:0,v:0,d:0,pts:0})
+}));
+
+lista.sort((a,b)=>b.pts-a.pts);
+
+let t=document.getElementById("class");
+if(!t) return;
+
+t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
+
+lista.forEach((j,i)=>{
+
+let classe="";
+let medalha="";
+
+if(i===0){classe="top1"; medalha="🥇";}
+else if(i===1){classe="top2"; medalha="🥈";}
+else if(i===2){classe="top3"; medalha="🥉";}
+else if(i<8){classe="top8";}
+
+t.innerHTML+=`
+<tr class="${classe}">
+<td>${medalha || i+1}</td>
+<td>${j.nome}</td>
+<td>${j.jg}</td>
+<td>${j.v}</td>
+<td>${j.d}</td>
+<td>${j.pts}</td>
+</tr>`;
+});
+
+}
+
+</script>
+
+</body>
+</html>
