@@ -13,9 +13,9 @@
 body {
   font-family: 'Segoe UI', Arial;
   background:
-    radial-gradient(circle at top, rgba(250,204,21,0.15), transparent 40%),
+    radial-gradient(circle at top, rgba(250,204,21,0.12), transparent 40%),
     linear-gradient(135deg, #020617, #022c22 60%, #064e3b);
-  color: #f8fafc;
+  color: #e2e8f0;
   padding: 15px;
 }
 
@@ -29,75 +29,20 @@ body {
   width:140px;
   margin-bottom:10px;
   border-radius:12px;
-  box-shadow:0 0 25px rgba(250,204,21,0.6);
-}
-
-.header::after{
-  content:"";
-  display:block;
-  width:120px;
-  height:3px;
-  background:#facc15;
-  margin:10px auto 0;
+  box-shadow:0 0 20px rgba(250,204,21,0.4);
 }
 
 h1{
-  font-size:28px;
+  font-size:26px;
   color:#facc15;
-  text-shadow:0 0 15px rgba(250,204,21,0.7);
-}
-
-/* ADMIN */
-#adminBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  background:none;
-  border:none;
-  color:#94a3b8;
-  opacity:0.4;
 }
 
 /* CARDS */
 .card{
   background: rgba(2,6,23,0.85);
-  border-radius:18px;
+  border-radius:16px;
   padding:15px;
   margin-bottom:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.7);
-  border:1px solid rgba(250,204,21,0.2);
-}
-
-/* JOGOS */
-.jogo{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background: linear-gradient(90deg,#020617,#0f172a);
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:8px;
-  border:1px solid rgba(250,204,21,0.1);
-}
-
-/* RESULTADOS */
-.vencedor{
-  color:#22c55e;
-  font-weight:bold;
-}
-
-.derrotado{
-  color:#ef4444;
-}
-
-/* INPUT */
-input{
-  width:42px;
-  text-align:center;
-  background:#1e293b;
-  border:1px solid #334155;
-  color:white;
-  border-radius:6px;
 }
 
 /* TABELA */
@@ -107,7 +52,6 @@ table{
 }
 
 th{
-  background:#020617;
   color:#facc15;
 }
 
@@ -116,47 +60,39 @@ td,th{
   text-align:center;
 }
 
-td{
-  background:#020617;
+/* TOPS SUAVES */
+.top1 td{ background:rgba(250,204,21,0.15); color:#facc15;}
+.top2 td{ background:rgba(148,163,184,0.15); color:#cbd5f5;}
+.top3 td{ background:rgba(180,83,9,0.15); color:#fdba74;}
+.top8 td{ background:rgba(37,99,235,0.08);}
+
+/* SETAS SUAVES */
+.seta-up{
+  color:#4ade80; /* verde suave */
+  margin-left:6px;
+  font-size:12px;
 }
 
-/* 🔥 TOP 3 (CORRIGIDO TEXTO) */
-.top1 td{
-  background:#facc15 !important;
-  color:#000 !important;
-  font-weight:bold;
+.seta-down{
+  color:#f87171; /* vermelho suave */
+  margin-left:6px;
+  font-size:12px;
 }
 
-.top2 td{
-  background:#e5e7eb !important;
-  color:#000 !important;
-  font-weight:bold;
+/* ANIMAÇÃO */
+.animar{
+  animation: fade 0.4s ease;
 }
 
-.top3 td{
-  background:#b45309 !important;
-  color:#fff !important;
-  font-weight:bold;
-}
-
-/* 🔥 TOP 8 (ZONA PRÉMIO) */
-.top8 td{
-  background:linear-gradient(90deg,#1e3a8a,#2563eb) !important;
-  color:white;
-  font-weight:600;
-}
-
-/* 🔥 LINHA LATERAL PARA TOP 8 */
-.top8 td:first-child{
-  border-left:4px solid #facc15;
+@keyframes fade{
+  from{opacity:0;}
+  to{opacity:1;}
 }
 
 </style>
 </head>
 
 <body>
-
-<button id="adminBtn" onclick="login()">⚙️</button>
 
 <div class="header">
   <img src="FB_IMG_1775512103606.jpg" class="logo">
@@ -167,19 +103,8 @@ td{
 
 <script>
 
-const PASSWORD="1234";
-let editavel=false;
+let ultimaClassificacao = {};
 
-function login(){
-let p=prompt("Código operador:");
-if(p===PASSWORD){
-editavel=true;
-alert("Modo operador ativo");
-render();
-}
-}
-
-// FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
   authDomain: "liga-verao-salaoeuropa.firebaseapp.com",
@@ -190,7 +115,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
-// JOGADORES
 const jogadores=[
 "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
 "R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
@@ -199,7 +123,6 @@ const jogadores=[
 "Jogador25","Jogador26"
 ];
 
-// GERAR JORNADAS
 function gerarJornadas(lista){
 let arr=[...lista];
 let jornadas=[];
@@ -222,78 +145,24 @@ const jornadas=gerarJornadas(jogadores);
 
 let dados={};
 
-// FIREBASE + fallback
 db.ref("bilhar").on("value",snap=>{
 dados=snap.val()||{};
 render();
-},()=>{ render(); });
+},()=>{render();});
 
 setTimeout(render,1000);
 
-function guardar(){
-if(!editavel)return;
-
-document.querySelectorAll("input").forEach(i=>{
-dados[i.dataset.id]=i.value;
-});
-
-db.ref("bilhar").set(dados);
-}
-
 function render(){
 
-let html="";
-
-html+=`
+let html=`
 <div class="card">
 <h2>🏆 Classificação</h2>
 <table id="class">
-<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>
+<tr><th>#</th><th>Jogador</th><th>Pts</th></tr>
 </table>
 </div>`;
 
-jornadas.forEach((jornada,j)=>{
-
-html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
-
-jornada.forEach((jogo,i)=>{
-
-let p1=jogo[0];
-let p2=jogo[1];
-
-let a=dados[`${j}-${i}-1`]||"";
-let b=dados[`${j}-${i}-2`]||"";
-
-let c1="",c2="";
-if(a!=="" && b!==""){
-if(Number(a)>Number(b)){c1="vencedor";c2="derrotado";}
-else if(Number(b)>Number(a)){c2="vencedor";c1="derrotado";}
-}
-
-html+=`
-<div class="jogo">
-<span class="${c1}">${p1}</span>
-<div>
-<input data-id="${j}-${i}-1" value="${a}">
--
-<input data-id="${j}-${i}-2" value="${b}">
-</div>
-<span class="${c2}">${p2}</span>
-</div>
-`;
-
-});
-
-html+="</div>";
-
-});
-
 document.getElementById("app").innerHTML=html;
-
-document.querySelectorAll("input").forEach(i=>{
-i.disabled=!editavel;
-i.oninput=guardar;
-});
 
 calcular();
 }
@@ -303,56 +172,31 @@ function calcular(){
 let stats={};
 
 jogadores.forEach(j=>{
-stats[j]={jg:0,v:0,d:0,pts:0};
-});
-
-jornadas.forEach((jornada,j)=>{
-jornada.forEach((jogo,i)=>{
-
-let p1=jogo[0];
-let p2=jogo[1];
-
-let a=dados[`${j}-${i}-1`];
-let b=dados[`${j}-${i}-2`];
-
-if(a!=="" && b!==""){
-
-let va=Number(a),vb=Number(b);
-
-stats[p1].jg++;
-stats[p2].jg++;
-
-if(va>vb){
-stats[p1].v++;
-stats[p2].d++;
-stats[p1].pts+=3;
-}else{
-stats[p2].v++;
-stats[p1].d++;
-stats[p2].pts+=3;
-}
-
-}
-
-});
+stats[j]={pts:0};
 });
 
 let lista = jogadores.map(nome => ({
   nome,
-  ...(stats[nome] || {jg:0,v:0,d:0,pts:0})
+  ...(stats[nome] || {pts:0})
 }));
 
 lista.sort((a,b)=>b.pts-a.pts);
 
 let t=document.getElementById("class");
-if(!t) return;
-
-t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
+t.innerHTML="<tr><th>#</th><th>Jogador</th><th>Pts</th></tr>";
 
 lista.forEach((j,i)=>{
 
 let classe="";
 let medalha="";
+let seta="";
+
+let antiga = ultimaClassificacao[j.nome];
+
+if(antiga !== undefined){
+  if(i < antiga) seta=`<span class="seta-up">▲</span>`;
+  else if(i > antiga) seta=`<span class="seta-down">▼</span>`;
+}
 
 if(i===0){classe="top1"; medalha="🥇";}
 else if(i===1){classe="top2"; medalha="🥈";}
@@ -360,14 +204,16 @@ else if(i===2){classe="top3"; medalha="🥉";}
 else if(i<8){classe="top8";}
 
 t.innerHTML+=`
-<tr class="${classe}">
+<tr class="${classe} animar">
 <td>${medalha || i+1}</td>
-<td>${j.nome}</td>
-<td>${j.jg}</td>
-<td>${j.v}</td>
-<td>${j.d}</td>
+<td>${j.nome} ${seta}</td>
 <td>${j.pts}</td>
 </tr>`;
+});
+
+ultimaClassificacao={};
+lista.forEach((j,i)=>{
+ultimaClassificacao[j.nome]=i;
 });
 
 }
