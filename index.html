@@ -2,41 +2,37 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<title>Liga de Verão Europa </title>
+<title>Liga de Verão Europa</title>
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <style>
 
-/* 🎱 FUNDO PREMIUM COM IMAGENS */
+/* 🎱 FUNDO */
 body {
   font-family: 'Segoe UI', Arial;
 
   background:
     radial-gradient(circle at 50% -10%, rgba(255,255,255,0.15), transparent 60%),
     radial-gradient(circle at bottom, rgba(0,0,0,0.5), transparent 60%),
-
-    url("") left 100px no-repeat,
-    url("") right 120px no-repeat,
-
+    url("img/bilhar1.png") left 100px no-repeat,
+    url("img/bilhar2.png") right 120px no-repeat,
     url("https://www.transparenttextures.com/patterns/felt.png");
 
-  background-size:
-    auto,
-    auto,
-    240px,
-    240px,
-    auto;
-
+  background-size: auto, auto, 240px, 240px, auto;
   background-color:#065f46;
 
   color:#f8fafc;
   padding:15px;
 }
 
-/* 🔥 OVERLAY PARA SUAVIZAR */
-body::after {
+/* OVERLAY */
+body::after{
   content:"";
   position:fixed;
   inset:0;
@@ -45,34 +41,25 @@ body::after {
   z-index:0;
 }
 
-/* GARANTIR CONTEÚDO ACIMA */
-#app, .logo, h1, .card {
+/* LAYER FIX */
+#app, .logo, h1, .card{
   position:relative;
   z-index:1;
 }
 
-/* 🏆 LOGO PREMIUM */
+/* LOGO */
 .logo{
   display:block;
   margin:0 auto 10px auto;
   width:160px;
   border-radius:14px;
-
-  box-shadow:
-    0 0 0 2px rgba(250,204,21,0.25),
-    0 0 25px rgba(250,204,21,0.25),
-    0 10px 25px rgba(0,0,0,0.6);
-
+  box-shadow:0 0 0 2px rgba(250,204,21,0.25),0 0 25px rgba(250,204,21,0.25),0 10px 25px rgba(0,0,0,0.6);
   background:rgba(0,0,0,0.3);
   padding:6px;
 }
 
 /* TÍTULO */
-h1 {
-  text-align:center;
-  color:#facc15;
-  margin-bottom:15px;
-}
+h1{text-align:center;color:#facc15;margin-bottom:15px;}
 
 /* BOTÃO */
 #adminBtn{
@@ -86,20 +73,15 @@ h1 {
   z-index:2;
 }
 
-/* 🔥 CARDS GLASS */
+/* CARDS */
 .card{
-  background: rgba(15,23,42,0.55);
-  backdrop-filter: blur(10px);
-
+  background:rgba(15,23,42,0.55);
+  backdrop-filter:blur(10px);
   border-radius:16px;
   padding:15px;
   margin-bottom:20px;
-
   border:1px solid rgba(250,204,21,0.15);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.6),
-    0 0 20px rgba(250,204,21,0.05);
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
 }
 
 /* JOGOS */
@@ -112,10 +94,6 @@ h1 {
   margin-bottom:6px;
 }
 
-/* RESULTADOS */
-.vencedor{ color:#22c55e; font-weight:bold;}
-.derrotado{ color:#ef4444; }
-
 /* INPUT */
 input{
   width:42px;
@@ -127,39 +105,19 @@ input{
 }
 
 /* TABELA */
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+table{width:100%;border-collapse:collapse;}
+th{background:#020617;color:#facc15;}
+td,th{padding:10px;text-align:center;}
 
-th{
-  background:#020617;
-  color:#facc15;
-}
+/* TOP */
+.top1 td{background:rgba(250,204,21,0.12);color:#fef08a;}
+.top2 td{background:rgba(148,163,184,0.12);}
+.top3 td{background:rgba(180,83,9,0.12);color:#fdba74;}
+.top td{background:rgba(37,99,235,0.06);}
 
-td,th{
-  padding:10px;
-  text-align:center;
-}
-
-/* 🏆 TOP SUAVE */
-.top1 td{
-  background:rgba(250,204,21,0.12);
-  color:#fef08a;
-}
-
-.top2 td{
-  background:rgba(148,163,184,0.12);
-}
-
-.top3 td{
-  background:rgba(180,83,9,0.12);
-  color:#fdba74;
-}
-
-.top td{
-  background:rgba(37,99,235,0.06);
-}
+/* SETAS */
+.seta-up{color:#4ade80;margin-left:6px;font-size:12px;}
+.seta-down{color:#f87171;margin-left:6px;font-size:12px;}
 
 </style>
 </head>
@@ -169,7 +127,7 @@ td,th{
 <button id="adminBtn" onclick="login()">⚙️</button>
 
 <img src="FB_IMG_1775512103606.jpg" class="logo">
-<h1>🎱 LIGA DE VERÃO EUROPA 🎱</h1>
+<h1>LIGA DE VERÃO EUROPA</h1>
 
 <div id="app"></div>
 
@@ -177,6 +135,7 @@ td,th{
 
 const PASSWORD="1234";
 let editavel=false;
+let posicoesAnteriores={};
 
 function login(){
 let p=prompt("Código operador:");
@@ -186,27 +145,24 @@ render();
 }
 }
 
-// FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
-  authDomain: "liga-verao-salaoeuropa.firebaseapp.com",
-  databaseURL: "https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "liga-verao-salaoeuropa"
+const firebaseConfig={
+apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
+authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
+databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
+projectId:"liga-verao-salaoeuropa"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
-// JOGADORES
 const jogadores=[
 "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
 "R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
 "Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Gesto","Carlos Leal","Zé Vieira",
 "Ruben Pereira","Flávio","Sérgio Filipe","Santiago","Paulo Martins","Nuno Continental",
-"Artur","Jogador26"
+"Jogador25","Jogador26"
 ];
 
-// JORNADAS
 function gerarJornadas(lista){
 let arr=[...lista];
 let jornadas=[];
@@ -217,7 +173,7 @@ let jornada=[];
 for(let j=0;j<arr.length/2;j++){
 let a=arr[j];
 let b=arr[arr.length-1-j];
-if(a && b) jornada.push([a,b]);
+if(a&&b)jornada.push([a,b]);
 }
 arr.splice(1,0,arr.pop());
 jornadas.push(jornada);
@@ -226,7 +182,6 @@ return jornadas;
 }
 
 const jornadas=gerarJornadas(jogadores);
-
 let dados={};
 
 db.ref("bilhar").on("value",snap=>{
@@ -255,28 +210,21 @@ jornadas.forEach((jornada,j)=>{
 html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
 
 jornada.forEach((jogo,i)=>{
-
 let p1=jogo[0];
 let p2=jogo[1];
 
 let a=dados[`${j}-${i}-1`]||"";
 let b=dados[`${j}-${i}-2`]||"";
 
-let c1="",c2="";
-if(a!=="" && b!==""){
-if(Number(a)>Number(b)){c1="vencedor";c2="derrotado";}
-else if(Number(b)>Number(a)){c2="vencedor";c1="derrotado";}
-}
-
 html+=`
 <div class="jogo">
-<span class="${c1}">${p1}</span>
+<span>${p1}</span>
 <div>
 <input data-id="${j}-${i}-1" value="${a}">
 -
 <input data-id="${j}-${i}-2" value="${b}">
 </div>
-<span class="${c2}">${p2}</span>
+<span>${p2}</span>
 </div>`;
 });
 
@@ -310,23 +258,17 @@ let p2=jogo[1];
 let a=dados[`${j}-${i}-1`];
 let b=dados[`${j}-${i}-2`];
 
-if(a!=="" && b!==""){
-
+if(a!==""&&b!==""){
 let va=Number(a),vb=Number(b);
 
 stats[p1].jg++;
 stats[p2].jg++;
 
 if(va>vb){
-stats[p1].v++;
-stats[p2].d++;
-stats[p1].pts+=3;
+stats[p1].v++;stats[p2].d++;stats[p1].pts+=3;
 }else{
-stats[p2].v++;
-stats[p1].d++;
-stats[p2].pts+=3;
+stats[p2].v++;stats[p1].d++;stats[p2].pts+=3;
 }
-
 }
 
 });
@@ -335,21 +277,34 @@ stats[p2].pts+=3;
 let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
 lista.sort((a,b)=>b.pts-a.pts);
 
+let novaPosicao={};
 let t=document.getElementById("class");
 
 t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>Pts</th></tr>";
 
 lista.forEach((j,i)=>{
+
 let classe="";
 if(i===0)classe="top1";
 else if(i===1)classe="top2";
 else if(i===2)classe="top3";
 else if(i<8)classe="top";
 
+let seta="";
+
+if(posicoesAnteriores[j.nome]!==undefined){
+let antiga=posicoesAnteriores[j.nome];
+
+if(i<antiga)seta=`<span class="seta-up">▲</span>`;
+else if(i>antiga)seta=`<span class="seta-down">▼</span>`;
+}
+
+novaPosicao[j.nome]=i;
+
 t.innerHTML+=`
 <tr class="${classe}">
 <td>${i+1}</td>
-<td>${j.nome}</td>
+<td>${j.nome} ${seta}</td>
 <td>${j.jg}</td>
 <td>${j.v}</td>
 <td>${j.d}</td>
@@ -357,6 +312,7 @@ t.innerHTML+=`
 </tr>`;
 });
 
+posicoesAnteriores=novaPosicao;
 }
 
 </script>
