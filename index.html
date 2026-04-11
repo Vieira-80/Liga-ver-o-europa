@@ -92,6 +92,11 @@ h1{text-align:center;color:#facc15;margin-bottom:15px;}
   margin-bottom:6px;
 }
 
+/* RESULTADOS */
+.vencedor{ color:#22c55e; font-weight:bold;}
+.derrotado{ color:#ef4444; }
+
+/* INPUT */
 input{
   width:42px;
   text-align:center;
@@ -248,15 +253,27 @@ let p2=jogo[1];
 let a=dados[`${j}-${i}-1`]||"";
 let b=dados[`${j}-${i}-2`]||"";
 
+let c1="",c2="";
+
+if(a!=="" && b!==""){
+if(Number(a)>Number(b)){
+c1="vencedor";
+c2="derrotado";
+}else if(Number(b)>Number(a)){
+c2="vencedor";
+c1="derrotado";
+}
+}
+
 html+=`
 <div class="jogo">
-<span>${p1}</span>
+<span class="${c1}">${p1}</span>
 <div>
 <input data-id="${j}-${i}-1" value="${a}">
 -
 <input data-id="${j}-${i}-2" value="${b}">
 </div>
-<span>${p2}</span>
+<span class="${c2}">${p2}</span>
 </div>`;
 });
 
