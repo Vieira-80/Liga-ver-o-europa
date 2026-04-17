@@ -149,9 +149,9 @@ const db=firebase.database();
 const jogadores=[
 "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
 "R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
-"Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Marco Rodrigues","Carlos Leal","Zé Vieira",
-"Ruben Pereira","Flávio","Sérgio Filipe","Santiago","Vítor Lopes","Nuno Continental",
-"Artur","Camilo"
+"Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Gesto","Carlos Leal","Zé Vieira",
+"Ruben Pereira","Flávio","Sérgio Filipe","Santiago","Paulo Martins","Nuno Continental",
+"Jogador25","Jogador26"
 ];
 
 function gerarJornadas(lista){
@@ -325,9 +325,14 @@ let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
 
 lista.sort((a,b)=>{
 if(b.pts!==a.pts)return b.pts-a.pts;
+
+// 🔥 PRIORIDADE DP
+if(b.dp!==a.dp)return b.dp-a.dp;
+
+// 🔥 DEPOIS CONFRONTO DIRETO
 let cd=confrontoDireto(a,b);
 if(cd!==0)return cd;
-if(b.dp!==a.dp)return b.dp-a.dp;
+
 return 0;
 });
 
