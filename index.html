@@ -170,12 +170,25 @@ const jornadas=gerarJornadas(jogadores);
 let dados={};
 
 db.ref("bilhar").on("value",snap=>{
-  dados=snap.val() || {};
+  dados = snap.val() || {};
   render();
-}, error=>{
-  console.error("Erro Firebase:", error);
+
+}, error => {
+
+  console.log("Erro Firebase:", error);
+
+  // mesmo com erro tenta renderizar
   render();
 });
+
+// fallback caso Firebase demore
+window.onload = () => {
+  setTimeout(() => {
+    if(document.getElementById("app").innerHTML.trim() === ""){
+      render();
+    }
+  }, 1000);
+};
 
 // garante que aparece mesmo sem resposta do Firebase
 setTimeout(()=>{
