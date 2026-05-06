@@ -12,20 +12,16 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <style>
-
 body {
   font-family: 'Segoe UI', Arial;
-
   background:
     radial-gradient(circle at 50% -10%, rgba(255,255,255,0.15), transparent 60%),
     radial-gradient(circle at bottom, rgba(0,0,0,0.5), transparent 60%),
     url("img/bilhar1.png") left 100px no-repeat,
     url("img/bilhar2.png") right 120px no-repeat,
     url("https://www.transparenttextures.com/patterns/felt.png");
-
   background-size: auto, auto, 240px, 240px, auto;
   background-color:#065f46;
-
   color:#f8fafc;
   padding:15px;
 }
@@ -109,7 +105,6 @@ td,th{padding:10px;text-align:center;}
 
 .seta-up{color:#4ade80;margin-left:6px;font-size:12px;}
 .seta-down{color:#f87171;margin-left:6px;font-size:12px;}
-
 </style>
 </head>
 
@@ -123,259 +118,266 @@ td,th{padding:10px;text-align:center;}
 <div id="app"></div>
 
 <script>
-
 const PASSWORD="1234";
 let editavel=false;
 let posicoesAnteriores={};
 
 function login(){
-let p=prompt("Código operador:");
-if(p===PASSWORD){
-editavel=true;
-render();
-}
+  let p=prompt("Código operador:");
+  if(p===PASSWORD){
+    editavel=true;
+    render();
+  }
 }
 
 const firebaseConfig={
-apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
-authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
-databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
-projectId:"liga-verao-salaoeuropa"
+  apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
+  authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
+  databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"liga-verao-salaoeuropa"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
 
 const jogadores=[
-"Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
-"R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
-"Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Marco Rodrigues","Carlos Leal","Zé Vieira",
-"Ruben Pereira","Flávio","Sérgio Filipe","Santiago","Vítor Lopes","Nuno Continental",
-"Artur","Camilo"
+  "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
+  "R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
+  "Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Marco Rodrigues",
+  "Carlos Leal","Zé Vieira","Ruben Pereira","Flávio","Sérgio Filipe",
+  "Santiago","Vítor Lopes","Nuno Continental","Artur","Camilo"
 ];
 
 function gerarJornadas(lista){
-let arr=[...lista];
-let jornadas=[];
-if(arr.length%2!==0)arr.push(null);
+  let arr=[...lista];
+  let jornadas=[];
+  if(arr.length%2!==0)arr.push(null);
 
-for(let i=0;i<arr.length-1;i++){
-let jornada=[];
-for(let j=0;j<arr.length/2;j++){
-let a=arr[j];
-let b=arr[arr.length-1-j];
-if(a&&b)jornada.push([a,b]);
-}
-arr.splice(1,0,arr.pop());
-jornadas.push(jornada);
-}
-return jornadas;
+  for(let i=0;i<arr.length-1;i++){
+    let jornada=[];
+    for(let j=0;j<arr.length/2;j++){
+      let a=arr[j];
+      let b=arr[arr.length-1-j];
+      if(a&&b)jornada.push([a,b]);
+    }
+    arr.splice(1,0,arr.pop());
+    jornadas.push(jornada);
+  }
+  return jornadas;
 }
 
 const jornadas=gerarJornadas(jogadores);
 let dados={};
 
 db.ref("bilhar").on("value",snap=>{
-dados=snap.val()||{};
-render();
+  dados=snap.val()||{};
+  render();
 });
 
+function valorValido(v){
+  return v !== undefined && v !== null && v !== "" && !Number.isNaN(Number(v));
+}
+
 function guardar(){
-if(!editavel)return;
-document.querySelectorAll("input").forEach(i=>{
-dados[i.dataset.id]=i.value;
-});
-db.ref("bilhar").set(dados);
+  if(!editavel)return;
+
+  document.querySelectorAll("input").forEach(i=>{
+    dados[i.dataset.id]=i.value;
+  });
+
+  db.ref("bilhar").set(dados);
 }
 
 function confrontoDireto(a,b){
-for(let j=0;j<jornadas.length;j++){
-for(let i=0;i<jornadas[j].length;i++){
+  for(let j=0;j<jornadas.length;j++){
+    for(let i=0;i<jornadas[j].length;i++){
 
-let jogo=jornadas[j][i];
+      let jogo=jornadas[j][i];
 
-if(
-(jogo[0]===a.nome && jogo[1]===b.nome) ||
-(jogo[0]===b.nome && jogo[1]===a.nome)
-){
+      if(
+        (jogo[0]===a.nome && jogo[1]===b.nome) ||
+        (jogo[0]===b.nome && jogo[1]===a.nome)
+      ){
 
-let aScore=dados[`${j}-${i}-1`];
-let bScore=dados[`${j}-${i}-2`];
+        let score1=dados[`${j}-${i}-1`];
+        let score2=dados[`${j}-${i}-2`];
 
-if(aScore!=="" && bScore!==""){
+        if(valorValido(score1) && valorValido(score2)){
 
-let va=Number(aScore);
-let vb=Number(bScore);
+          let v1=Number(score1);
+          let v2=Number(score2);
 
-if(jogo[0]===a.nome){
-if(va>vb)return -1;
-if(vb>va)return 1;
-}else{
-if(vb>va)return -1;
-if(va>vb)return 1;
-}
+          if(jogo[0]===a.nome){
+            if(v1>v2)return -1;
+            if(v2>v1)return 1;
+          }else{
+            if(v2>v1)return -1;
+            if(v1>v2)return 1;
+          }
 
-}
-
-}
-}
-}
-return 0;
+        }
+      }
+    }
+  }
+  return 0;
 }
 
 function render(){
 
-let html="";
+  let html="";
 
-html+=`<div class="card"><h2>🏆 Classificação</h2>
-<table id="class">
-<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>
-</table></div>`;
+  html+=`<div class="card"><h2>🏆 Classificação</h2>
+  <table id="class">
+  <tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>
+  </table></div>`;
 
-jornadas.forEach((jornada,j)=>{
-html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
+  jornadas.forEach((jornada,j)=>{
+    html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
 
-jornada.forEach((jogo,i)=>{
-let p1=jogo[0];
-let p2=jogo[1];
+    jornada.forEach((jogo,i)=>{
+      let p1=jogo[0];
+      let p2=jogo[1];
 
-let a=dados[`${j}-${i}-1`]||"";
-let b=dados[`${j}-${i}-2`]||"";
+      let a=dados[`${j}-${i}-1`] ?? "";
+      let b=dados[`${j}-${i}-2`] ?? "";
 
-let c1="",c2="";
+      let c1="",c2="";
 
-if(a!=="" && b!==""){
-if(Number(a)>Number(b)){
-c1="vencedor";
-c2="derrotado";
-}else if(Number(b)>Number(a)){
-c2="vencedor";
-c1="derrotado";
-}
-}
+      if(valorValido(a) && valorValido(b)){
+        if(Number(a)>Number(b)){
+          c1="vencedor";
+          c2="derrotado";
+        }else if(Number(b)>Number(a)){
+          c2="vencedor";
+          c1="derrotado";
+        }
+      }
 
-html+=`
-<div class="jogo">
-<span class="${c1}">${p1}</span>
-<div>
-<input data-id="${j}-${i}-1" value="${a}">
--
-<input data-id="${j}-${i}-2" value="${b}">
-</div>
-<span class="${c2}">${p2}</span>
-</div>`;
-});
+      html+=`
+      <div class="jogo">
+      <span class="${c1}">${p1}</span>
+      <div>
+      <input data-id="${j}-${i}-1" value="${a}">
+      -
+      <input data-id="${j}-${i}-2" value="${b}">
+      </div>
+      <span class="${c2}">${p2}</span>
+      </div>`;
+    });
 
-html+="</div>";
-});
+    html+="</div>";
+  });
 
-document.getElementById("app").innerHTML=html;
+  document.getElementById("app").innerHTML=html;
 
-document.querySelectorAll("input").forEach(i=>{
-i.disabled=!editavel;
-i.oninput=guardar;
-});
+  document.querySelectorAll("input").forEach(i=>{
+    i.disabled=!editavel;
+    i.oninput=guardar;
+  });
 
-calcular();
+  calcular();
 }
 
 function calcular(){
 
-let stats={};
+  let stats={};
 
-jogadores.forEach(j=>{
-stats[j]={jg:0,v:0,d:0,pg:0,pp:0,dp:0,pts:0};
-});
+  jogadores.forEach(j=>{
+    stats[j]={jg:0,v:0,d:0,pg:0,pp:0,dp:0,pts:0};
+  });
 
-jornadas.forEach((jornada,j)=>{
-jornada.forEach((jogo,i)=>{
+  jornadas.forEach((jornada,j)=>{
+    jornada.forEach((jogo,i)=>{
 
-let p1=jogo[0];
-let p2=jogo[1];
+      let p1=jogo[0];
+      let p2=jogo[1];
 
-let a=dados[`${j}-${i}-1`];
-let b=dados[`${j}-${i}-2`];
+      let a=dados[`${j}-${i}-1`];
+      let b=dados[`${j}-${i}-2`];
 
-if(a!==""&&b!==""){
-let va=Number(a),vb=Number(b);
+      if(valorValido(a) && valorValido(b)){
+        let va=Number(a);
+        let vb=Number(b);
 
-stats[p1].jg++;
-stats[p2].jg++;
+        stats[p1].jg++;
+        stats[p2].jg++;
 
-stats[p1].pg+=va;
-stats[p1].pp+=vb;
+        stats[p1].pg+=va;
+        stats[p1].pp+=vb;
 
-stats[p2].pg+=vb;
-stats[p2].pp+=va;
+        stats[p2].pg+=vb;
+        stats[p2].pp+=va;
 
-stats[p1].dp = stats[p1].pg - stats[p1].pp;
-stats[p2].dp = stats[p2].pg - stats[p2].pp;
+        stats[p1].dp=stats[p1].pg-stats[p1].pp;
+        stats[p2].dp=stats[p2].pg-stats[p2].pp;
 
-if(va>vb){
-stats[p1].v++;stats[p2].d++;stats[p1].pts+=3;
-}else{
-stats[p2].v++;stats[p1].d++;stats[p2].pts+=3;
+        if(va>vb){
+          stats[p1].v++;
+          stats[p2].d++;
+          stats[p1].pts+=3;
+        }else if(vb>va){
+          stats[p2].v++;
+          stats[p1].d++;
+          stats[p2].pts+=3;
+        }
+      }
+
+    });
+  });
+
+  let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
+
+  lista.sort((a,b)=>{
+    if(b.pts!==a.pts)return b.pts-a.pts;
+    if(b.dp!==a.dp)return b.dp-a.dp;
+
+    let cd=confrontoDireto(a,b);
+    if(cd!==0)return cd;
+
+    if(b.pg!==a.pg)return b.pg-a.pg;
+
+    return a.nome.localeCompare(b.nome);
+  });
+
+  let novaPosicao={};
+  let t=document.getElementById("class");
+
+  t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>";
+
+  lista.forEach((j,i)=>{
+
+    let classe="";
+    if(i===0)classe="top1";
+    else if(i===1)classe="top2";
+    else if(i===2)classe="top3";
+    else if(i<8)classe="top";
+
+    let seta="";
+
+    if(posicoesAnteriores[j.nome]!==undefined){
+      let antiga=posicoesAnteriores[j.nome];
+      if(i<antiga)seta=`<span class="seta-up">▲</span>`;
+      else if(i>antiga)seta=`<span class="seta-down">▼</span>`;
+    }
+
+    novaPosicao[j.nome]=i;
+
+    t.innerHTML+=`
+    <tr class="${classe}">
+    <td>${i+1}</td>
+    <td>${j.nome} ${seta}</td>
+    <td>${j.jg}</td>
+    <td>${j.v}</td>
+    <td>${j.d}</td>
+    <td>${j.pg}</td>
+    <td>${j.pp}</td>
+    <td>${j.dp}</td>
+    <td>${j.pts}</td>
+    </tr>`;
+  });
+
+  posicoesAnteriores=novaPosicao;
 }
-}
-
-});
-});
-
-let lista=Object.keys(stats).map(n=>({nome:n,...stats[n]}));
-
-lista.sort((a,b)=>{
-if(b.pts!==a.pts)return b.pts-a.pts;
-
-// 🔥 PRIORIDADE DP
-if(b.dp!==a.dp)return b.dp-a.dp;
-
-// 🔥 DEPOIS CONFRONTO DIRETO
-let cd=confrontoDireto(a,b);
-if(cd!==0)return cd;
-
-return 0;
-});
-
-let novaPosicao={};
-let t=document.getElementById("class");
-
-t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>";
-
-lista.forEach((j,i)=>{
-
-let classe="";
-if(i===0)classe="top1";
-else if(i===1)classe="top2";
-else if(i===2)classe="top3";
-else if(i<8)classe="top";
-
-let seta="";
-
-if(posicoesAnteriores[j.nome]!==undefined){
-let antiga=posicoesAnteriores[j.nome];
-if(i<antiga)seta=`<span class="seta-up">▲</span>`;
-else if(i>antiga)seta=`<span class="seta-down">▼</span>`;
-}
-
-novaPosicao[j.nome]=i;
-
-t.innerHTML+=`
-<tr class="${classe}">
-<td>${i+1}</td>
-<td>${j.nome} ${seta}</td>
-<td>${j.jg}</td>
-<td>${j.v}</td>
-<td>${j.d}</td>
-<td>${j.pg}</td>
-<td>${j.pp}</td>
-<td>${j.dp}</td>
-<td>${j.pts}</td>
-</tr>`;
-});
-
-posicoesAnteriores=novaPosicao;
-}
-
 </script>
 
 </body>
