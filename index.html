@@ -4,40 +4,22 @@
 <meta charset="UTF-8">
 <title>Liga de Verão Europa</title>
 
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <style>
-body {
-  font-family: 'Segoe UI', Arial;
+body{
+  font-family:'Segoe UI',Arial;
   background:
-    radial-gradient(circle at 50% -10%, rgba(255,255,255,0.15), transparent 60%),
-    radial-gradient(circle at bottom, rgba(0,0,0,0.5), transparent 60%),
+    radial-gradient(circle at 50% -10%,rgba(255,255,255,.15),transparent 60%),
+    radial-gradient(circle at bottom,rgba(0,0,0,.5),transparent 60%),
     url("img/bilhar1.png") left 100px no-repeat,
     url("img/bilhar2.png") right 120px no-repeat,
     url("https://www.transparenttextures.com/patterns/felt.png");
-  background-size: auto, auto, 240px, 240px, auto;
+  background-size:auto,auto,240px,240px,auto;
   background-color:#065f46;
   color:#f8fafc;
   padding:15px;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.35);
-  pointer-events:none;
-  z-index:0;
-}
-
-#app, .logo, h1, .card{
-  position:relative;
-  z-index:1;
 }
 
 .logo{
@@ -45,8 +27,8 @@ body::after{
   margin:0 auto 10px auto;
   width:160px;
   border-radius:14px;
-  box-shadow:0 0 0 2px rgba(250,204,21,0.25),0 0 25px rgba(250,204,21,0.25),0 10px 25px rgba(0,0,0,0.6);
-  background:rgba(0,0,0,0.3);
+  box-shadow:0 0 0 2px rgba(250,204,21,.25),0 0 25px rgba(250,204,21,.25),0 10px 25px rgba(0,0,0,.6);
+  background:rgba(0,0,0,.3);
   padding:6px;
 }
 
@@ -56,34 +38,37 @@ h1{text-align:center;color:#facc15;margin-bottom:15px;}
   position:fixed;
   top:10px;
   right:10px;
-  background:none;
-  border:none;
-  color:#94a3b8;
-  opacity:0.5;
-  z-index:2;
+  z-index:9999;
+  background:rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.25);
+  color:#e2e8f0;
+  border-radius:8px;
+  padding:7px;
 }
 
 .card{
-  background:rgba(15,23,42,0.55);
+  background:rgba(15,23,42,.72);
   backdrop-filter:blur(10px);
   border-radius:16px;
   padding:15px;
   margin-bottom:20px;
-  border:1px solid rgba(250,204,21,0.15);
-  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+  border:1px solid rgba(250,204,21,.15);
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
 }
 
 .jogo{
   display:flex;
   justify-content:space-between;
-  background:rgba(2,6,23,0.8);
+  align-items:center;
+  gap:8px;
+  background:rgba(2,6,23,.8);
   padding:10px;
   border-radius:10px;
   margin-bottom:6px;
 }
 
-.vencedor{ color:#22c55e; font-weight:bold;}
-.derrotado{ color:#ef4444; }
+.vencedor{color:#22c55e;font-weight:bold;}
+.derrotado{color:#ef4444;}
 
 input{
   width:42px;
@@ -98,10 +83,10 @@ table{width:100%;border-collapse:collapse;}
 th{background:#020617;color:#facc15;}
 td,th{padding:10px;text-align:center;}
 
-.top1 td{background:rgba(250,204,21,0.12);color:#fef08a;}
-.top2 td{background:rgba(148,163,184,0.12);}
-.top3 td{background:rgba(180,83,9,0.12);color:#fdba74;}
-.top td{background:rgba(37,99,235,0.06);}
+.top1 td{background:rgba(250,204,21,.12);color:#fef08a;}
+.top2 td{background:rgba(148,163,184,.12);}
+.top3 td{background:rgba(180,83,9,.12);color:#fdba74;}
+.top td{background:rgba(37,99,235,.06);}
 
 .seta-up{color:#4ade80;margin-left:6px;font-size:12px;}
 .seta-down{color:#f87171;margin-left:6px;font-size:12px;}
@@ -110,7 +95,7 @@ td,th{padding:10px;text-align:center;}
 
 <body>
 
-<button id="adminBtn" onclick="login()">⚙️</button>
+<button id="adminBtn">⚙️</button>
 
 <img src="FB_IMG_1775512103606.jpg" class="logo">
 <h1>LIGA DE VERÃO EUROPA</h1>
@@ -120,33 +105,30 @@ td,th{padding:10px;text-align:center;}
 <script>
 const PASSWORD="1234";
 let editavel=false;
+let dados={};
+let db=null;
 let posicoesAnteriores={};
 
-function login(){
+const jogadores=[
+"Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
+"R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
+"Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Marco Rodrigues",
+"Carlos Leal","Zé Vieira","Ruben Pereira","Flávio","Sérgio Filipe",
+"Santiago","Vítor Lopes","Nuno Continental","Artur","Camilo"
+];
+
+document.getElementById("adminBtn").onclick=function(){
   let p=prompt("Código operador:");
   if(p===PASSWORD){
     editavel=true;
+    alert("Modo operador ativo");
     render();
   }
-}
-
-const firebaseConfig={
-  apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
-  authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
-  databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:"liga-verao-salaoeuropa"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db=firebase.database();
-
-const jogadores=[
-  "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
-  "R.Martins","Guilherme","Fábio","João Pinto","Jorge Pinheiro","Ismael",
-  "Ricardo da Costa","Nuno Oliveira","Ricardo Silva","Marco Rodrigues",
-  "Carlos Leal","Zé Vieira","Ruben Pereira","Flávio","Sérgio Filipe",
-  "Santiago","Vítor Lopes","Nuno Continental","Artur","Camilo"
-];
+function valorValido(v){
+  return v!==undefined && v!==null && v!=="" && !Number.isNaN(Number(v));
+}
 
 function gerarJornadas(lista){
   let arr=[...lista];
@@ -167,40 +149,6 @@ function gerarJornadas(lista){
 }
 
 const jornadas=gerarJornadas(jogadores);
-let dados={};
-
-db.ref("bilhar").on("value",snap=>{
-  dados = snap.val() || {};
-  render();
-
-}, error => {
-
-  console.log("Erro Firebase:", error);
-
-  // mesmo com erro tenta renderizar
-  render();
-});
-
-// fallback caso Firebase demore
-window.onload = () => {
-  setTimeout(() => {
-    if(document.getElementById("app").innerHTML.trim() === ""){
-      render();
-    }
-  }, 1000);
-};
-
-// garante que aparece mesmo sem resposta do Firebase
-setTimeout(()=>{
-  if(document.getElementById("app").innerHTML.trim()===""){
-    render();
-  }
-}, 800);
-});
-
-function valorValido(v){
-  return v !== undefined && v !== null && v !== "" && !Number.isNaN(Number(v));
-}
 
 function guardar(){
   if(!editavel)return;
@@ -209,27 +157,23 @@ function guardar(){
     dados[i.dataset.id]=i.value;
   });
 
-  db.ref("bilhar").set(dados);
+  if(db){
+    db.ref("bilhar").set(dados);
+  }
 }
 
 function confrontoDireto(a,b){
   for(let j=0;j<jornadas.length;j++){
     for(let i=0;i<jornadas[j].length;i++){
-
       let jogo=jornadas[j][i];
 
-      if(
-        (jogo[0]===a.nome && jogo[1]===b.nome) ||
-        (jogo[0]===b.nome && jogo[1]===a.nome)
-      ){
+      if((jogo[0]===a.nome && jogo[1]===b.nome) || (jogo[0]===b.nome && jogo[1]===a.nome)){
+        let s1=dados[`${j}-${i}-1`];
+        let s2=dados[`${j}-${i}-2`];
 
-        let score1=dados[`${j}-${i}-1`];
-        let score2=dados[`${j}-${i}-2`];
-
-        if(valorValido(score1) && valorValido(score2)){
-
-          let v1=Number(score1);
-          let v2=Number(score2);
+        if(valorValido(s1) && valorValido(s2)){
+          let v1=Number(s1);
+          let v2=Number(s2);
 
           if(jogo[0]===a.nome){
             if(v1>v2)return -1;
@@ -238,7 +182,6 @@ function confrontoDireto(a,b){
             if(v2>v1)return -1;
             if(v1>v2)return 1;
           }
-
         }
       }
     }
@@ -247,13 +190,13 @@ function confrontoDireto(a,b){
 }
 
 function render(){
-
-  let html="";
-
-  html+=`<div class="card"><h2>🏆 Classificação</h2>
-  <table id="class">
-  <tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>
-  </table></div>`;
+  let html=`
+  <div class="card">
+    <h2>🏆 Classificação</h2>
+    <table id="class">
+      <tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>
+    </table>
+  </div>`;
 
   jornadas.forEach((jornada,j)=>{
     html+=`<div class="card"><h3>Jornada ${j+1}</h3>`;
@@ -268,24 +211,19 @@ function render(){
       let c1="",c2="";
 
       if(valorValido(a) && valorValido(b)){
-        if(Number(a)>Number(b)){
-          c1="vencedor";
-          c2="derrotado";
-        }else if(Number(b)>Number(a)){
-          c2="vencedor";
-          c1="derrotado";
-        }
+        if(Number(a)>Number(b)){c1="vencedor";c2="derrotado";}
+        else if(Number(b)>Number(a)){c2="vencedor";c1="derrotado";}
       }
 
       html+=`
       <div class="jogo">
-      <span class="${c1}">${p1}</span>
-      <div>
-      <input data-id="${j}-${i}-1" value="${a}">
-      -
-      <input data-id="${j}-${i}-2" value="${b}">
-      </div>
-      <span class="${c2}">${p2}</span>
+        <span class="${c1}">${p1}</span>
+        <div>
+          <input data-id="${j}-${i}-1" value="${a}">
+          -
+          <input data-id="${j}-${i}-2" value="${b}">
+        </div>
+        <span class="${c2}">${p2}</span>
       </div>`;
     });
 
@@ -303,7 +241,6 @@ function render(){
 }
 
 function calcular(){
-
   let stats={};
 
   jogadores.forEach(j=>{
@@ -312,7 +249,6 @@ function calcular(){
 
   jornadas.forEach((jornada,j)=>{
     jornada.forEach((jogo,i)=>{
-
       let p1=jogo[0];
       let p2=jogo[1];
 
@@ -345,7 +281,6 @@ function calcular(){
           stats[p2].pts+=3;
         }
       }
-
     });
   });
 
@@ -354,22 +289,20 @@ function calcular(){
   lista.sort((a,b)=>{
     if(b.pts!==a.pts)return b.pts-a.pts;
     if(b.dp!==a.dp)return b.dp-a.dp;
-
     let cd=confrontoDireto(a,b);
     if(cd!==0)return cd;
-
     if(b.pg!==a.pg)return b.pg-a.pg;
-
     return a.nome.localeCompare(b.nome);
   });
 
-  let novaPosicao={};
   let t=document.getElementById("class");
+  if(!t)return;
 
   t.innerHTML="<tr><th>#</th><th>Jogador</th><th>JG</th><th>V</th><th>D</th><th>PG</th><th>PP</th><th>DP</th><th>Pts</th></tr>";
 
-  lista.forEach((j,i)=>{
+  let novaPosicao={};
 
+  lista.forEach((j,i)=>{
     let classe="";
     if(i===0)classe="top1";
     else if(i===1)classe="top2";
@@ -377,7 +310,6 @@ function calcular(){
     else if(i<8)classe="top";
 
     let seta="";
-
     if(posicoesAnteriores[j.nome]!==undefined){
       let antiga=posicoesAnteriores[j.nome];
       if(i<antiga)seta=`<span class="seta-up">▲</span>`;
@@ -388,19 +320,45 @@ function calcular(){
 
     t.innerHTML+=`
     <tr class="${classe}">
-    <td>${i+1}</td>
-    <td>${j.nome} ${seta}</td>
-    <td>${j.jg}</td>
-    <td>${j.v}</td>
-    <td>${j.d}</td>
-    <td>${j.pg}</td>
-    <td>${j.pp}</td>
-    <td>${j.dp}</td>
-    <td>${j.pts}</td>
+      <td>${i+1}</td>
+      <td>${j.nome} ${seta}</td>
+      <td>${j.jg}</td>
+      <td>${j.v}</td>
+      <td>${j.d}</td>
+      <td>${j.pg}</td>
+      <td>${j.pp}</td>
+      <td>${j.dp}</td>
+      <td>${j.pts}</td>
     </tr>`;
   });
 
   posicoesAnteriores=novaPosicao;
+}
+
+render();
+
+try{
+  const firebaseConfig={
+    apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
+    authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
+    databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:"liga-verao-salaoeuropa"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  db=firebase.database();
+
+  db.ref("bilhar").on("value",snap=>{
+    dados=snap.val() || {};
+    render();
+  },err=>{
+    console.error("Erro Firebase:",err);
+    render();
+  });
+
+}catch(e){
+  console.error("Firebase falhou:",e);
+  render();
 }
 </script>
 
