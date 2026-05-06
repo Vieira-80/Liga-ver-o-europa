@@ -169,7 +169,7 @@ function gerarJornadas(lista){
 const jornadas=gerarJornadas(jogadores);
 let dados={};
 
-  db.ref("bilhar").on("value",snap=>{
+db.ref("bilhar").on("value",snap=>{
   dados=snap.val() || {};
   render();
 }, error=>{
