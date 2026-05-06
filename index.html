@@ -169,9 +169,20 @@ function gerarJornadas(lista){
 const jornadas=gerarJornadas(jogadores);
 let dados={};
 
-db.ref("bilhar").on("value",snap=>{
-  dados=snap.val()||{};
+  db.ref("bilhar").on("value",snap=>{
+  dados=snap.val() || {};
   render();
+}, error=>{
+  console.error("Erro Firebase:", error);
+  render();
+});
+
+// garante que aparece mesmo sem resposta do Firebase
+setTimeout(()=>{
+  if(document.getElementById("app").innerHTML.trim()===""){
+    render();
+  }
+}, 800);
 });
 
 function valorValido(v){
