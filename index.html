@@ -95,7 +95,7 @@ td,th{padding:10px;text-align:center;}
 
 <body>
 
-<button id="adminBtn">⚙️</button>
+<button id="adminBtn" onclick="login()">⚙️</button>
 
 <img src="FB_IMG_1775512103606.jpg" class="logo">
 <h1>LIGA DE VERÃO EUROPA</h1>
@@ -106,8 +106,8 @@ td,th{padding:10px;text-align:center;}
 const PASSWORD="1234";
 let editavel=false;
 let dados={};
-let db=null;
 let posicoesAnteriores={};
+let db=null;
 
 const jogadores=[
 "Filipe Soares","Pinto","P.Magalhães","Nelson","Rosas","R.Dias",
@@ -117,14 +117,14 @@ const jogadores=[
 "Santiago","Vítor Lopes","Nuno Continental","Artur","Camilo"
 ];
 
-document.getElementById("adminBtn").onclick=function(){
+function login(){
   let p=prompt("Código operador:");
   if(p===PASSWORD){
     editavel=true;
     alert("Modo operador ativo");
     render();
   }
-};
+}
 
 function valorValido(v){
   return v!==undefined && v!==null && v!=="" && !Number.isNaN(Number(v));
@@ -150,6 +150,32 @@ function gerarJornadas(lista){
 
 const jornadas=gerarJornadas(jogadores);
 
+function iniciarFirebase(){
+  try{
+    const firebaseConfig={
+      apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
+      authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
+      databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId:"liga-verao-salaoeuropa"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    db=firebase.database();
+
+    db.ref("bilhar").on("value",snap=>{
+      dados=snap.val() || {};
+      render();
+    },err=>{
+      console.error("Erro Firebase:",err);
+      render();
+    });
+
+  }catch(e){
+    console.error("Firebase falhou:",e);
+    render();
+  }
+}
+
 function guardar(){
   if(!editavel)return;
 
@@ -157,9 +183,17 @@ function guardar(){
     dados[i.dataset.id]=i.value;
   });
 
-  if(db){
-    db.ref("bilhar").set(dados);
+  if(!db){
+    alert("Firebase ainda não carregou. Espera uns segundos e tenta novamente.");
+    return;
   }
+
+  db.ref("bilhar").set(dados)
+    .then(()=>console.log("Resultado guardado"))
+    .catch(err=>{
+      console.error("Erro ao guardar:",err);
+      alert("Erro ao guardar resultado.");
+    });
 }
 
 function confrontoDireto(a,b){
@@ -234,7 +268,7 @@ function render(){
 
   document.querySelectorAll("input").forEach(i=>{
     i.disabled=!editavel;
-    i.oninput=guardar;
+    i.onchange=guardar;
   });
 
   calcular();
@@ -289,8 +323,10 @@ function calcular(){
   lista.sort((a,b)=>{
     if(b.pts!==a.pts)return b.pts-a.pts;
     if(b.dp!==a.dp)return b.dp-a.dp;
+
     let cd=confrontoDireto(a,b);
     if(cd!==0)return cd;
+
     if(b.pg!==a.pg)return b.pg-a.pg;
     return a.nome.localeCompare(b.nome);
   });
@@ -336,30 +372,7 @@ function calcular(){
 }
 
 render();
-
-try{
-  const firebaseConfig={
-    apiKey:"AIzaSyCH2x07uqd8f9Move6duv4NYCEx3SKacjQ",
-    authDomain:"liga-verao-salaoeuropa.firebaseapp.com",
-    databaseURL:"https://liga-verao-salaoeuropa-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId:"liga-verao-salaoeuropa"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  db=firebase.database();
-
-  db.ref("bilhar").on("value",snap=>{
-    dados=snap.val() || {};
-    render();
-  },err=>{
-    console.error("Erro Firebase:",err);
-    render();
-  });
-
-}catch(e){
-  console.error("Firebase falhou:",e);
-  render();
-}
+iniciarFirebase();
 </script>
 
 </body>
